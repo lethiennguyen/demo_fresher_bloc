@@ -1,60 +1,96 @@
-// import 'package:demo_fresher_bloc/core/core.src.dart';
-// import 'package:demo_fresher_bloc/feature/detail/data/data.src.dart';
-// import 'package:demo_fresher_bloc/feature/detail/domain/domain.src.dart';
-// import 'package:demo_fresher_bloc/feature/detail/domain/use_case/detail_product_use_case.dart';
-// import 'package:demo_fresher_bloc/feature/detail/mapper/detail_product_mapper.dart';
-// import 'package:demo_fresher_bloc/feature/home/data/data.src.dart';
-// import 'package:demo_fresher_bloc/feature/home/data/repositories_imp/home_repo_impl.dart';
-// import 'package:demo_fresher_bloc/feature/home/domain/repositories/home_repository.dart';
-// import 'package:demo_fresher_bloc/feature/home/presentation/controller/controller.src.dart';
-// import 'package:get/get.dart';
-//
-// import '../../../detail/mapper/mapper.src.dart';
-// import '../../domain/domain.src.dart';
-// import '../../mapper/mapper.src.dart';
-//
-// class HomeBinding extends BaseBinding {
-//   @override
-//   void dependencies() {
-//     super.dependencies();
-//     Get.lazyPut(() => HomeMapper(Get.find(), Get.find(), Get.find(), Get.find(),
-//         Get.find(), Get.find(), Get.find()));
-//     Get.lazyPut(() => ListProductRequestMapper());
-//     Get.lazyPut(() => CategoryMapper());
-//     Get.lazyPut(() => ProductMapper());
-//     Get.lazyPut(() => CategoriesDataMapper());
-//     Get.lazyPut(() => DeleteProductsMapper());
-//     Get.lazyPut(() => DeleteCategoryMapper());
-//     Get.lazyPut(() => DetailProductMapper(Get.find(), Get.find()));
-//     Get.lazyPut(() => ProductDataMapper());
-//     Get.lazyPut(() => CategoryRequestMapper());
-//   }
-//
-//   @override
-//   void injectController() {
-//     Get.lazyPut(() => HomeController(Get.find()));
-//   }
-//
-//   @override
-//   void injectRepository() {
-//     Get.lazyPut<HomeDataSources>(() => HomeDataSourcesImpl(Get.find()));
-//     Get.lazyPut<HomeRepository>(() => HomeRepoImpl(Get.find(), Get.find()));
-//     Get.lazyPut<DetailProductDataSources>(
-//         () => DetailProductSourceImpl(Get.find()));
-//     Get.lazyPut<DetailProductRepository>(
-//         () => DetailProductRepoImpl(Get.find()));
-//   }
-//
-//   @override
-//   void injectUseCase() {
-//     Get.lazyPut(() => HomeUseCase(Get.find(), Get.find(), Get.find(),
-//         Get.find(), Get.find(), Get.find(), Get.find()));
-//     Get.lazyPut(() => ListProductItemUseCase(Get.find()));
-//     Get.lazyPut(() => CategoriesUseCase(Get.find()));
-//     Get.lazyPut(() => DeleteProductUseCase(Get.find()));
-//     Get.lazyPut(() => DeleteCategoryUseCase(Get.find()));
-//     Get.lazyPut(() => CreateCategoryUseCase(Get.find()));
-//     Get.lazyPut(() => UpdateCategoryUseCase(Get.find()));
-//     Get.lazyPut(() => LogoutUseCase());
-//   }
-// }
+import 'package:demo_fresher_bloc/core/core.src.dart';
+import 'package:demo_fresher_bloc/feature/detail/data/data.src.dart';
+import 'package:demo_fresher_bloc/feature/detail/domain/domain.src.dart';
+import 'package:demo_fresher_bloc/feature/detail/domain/use_case/detail_product_use_case.dart';
+import 'package:demo_fresher_bloc/feature/home/data/data.src.dart';
+import 'package:demo_fresher_bloc/feature/home/domain/repositories/home_repository.dart';
+import 'package:demo_fresher_bloc/feature/home/presentation/bloc/controller.src.dart';
+import 'package:get_it/get_it.dart';
+
+import '../../../detail/mapper/mapper.src.dart';
+import '../../domain/domain.src.dart';
+import '../../mapper/mapper.src.dart';
+
+class HomeDI implements DIModule {
+  @override
+  Future<void> register(GetIt sl) async {
+    // =========================
+    // 1) MAPPERS
+    // =========================
+    sl.registerLazySingleton(() => ListProductRequestMapper());
+    sl.registerLazySingleton(() => CategoryMapper());
+    sl.registerLazySingleton(() => ProductMapper());
+    sl.registerLazySingleton(() => CategoriesDataMapper());
+    sl.registerLazySingleton(() => DeleteProductsMapper());
+    sl.registerLazySingleton(() => DeleteCategoryMapper());
+    sl.registerLazySingleton(() => ProductDataMapper());
+    sl.registerLazySingleton(() => CategoryRequestMapper());
+
+    // Detail mapper
+    sl.registerLazySingleton(() => DetailProductMapper(sl(), sl()));
+
+    // HomeMapper phụ thuộc nhiều mapper con
+    sl.registerLazySingleton(
+      () => HomeMapper(
+        sl(),
+        // ListProductRequestMapper
+        sl(),
+        // CategoryMapper
+        sl(),
+        // ProductMapper
+        sl(),
+        // CategoriesDataMapper
+        sl(),
+        // DeleteProductsMapper
+        sl(),
+        // DeleteCategoryMapper
+        sl(), // ProductDataMapper (hoặc mapper thứ 7 bạn truyền)
+      ),
+    );
+
+    // =========================
+    // 2) DATA SOURCES
+    // =========================
+    sl.registerLazySingleton<HomeDataSources>(() => HomeDataSourcesImpl(sl()));
+
+    sl.registerLazySingleton<DetailProductDataSources>(
+      () => DetailProductSourceImpl(sl()),
+    );
+
+    // =========================
+    // 3) REPOSITORIES
+    // =========================
+    sl.registerLazySingleton<HomeRepository>(() => HomeRepoImpl(sl(), sl()));
+    sl.registerLazySingleton<DetailProductRepository>(
+      () => DetailProductRepoImpl(sl()),
+    );
+
+    // =========================
+    // 4) USE CASES
+    // =========================
+    // Nếu HomeUseCase constructor đúng như bạn đang truyền 7 deps
+    sl.registerLazySingleton(
+      () => HomeUseCase(
+        sl(),
+        sl(),
+        sl(),
+        sl(),
+        sl(),
+        sl(),
+        sl(),
+      ),
+    );
+
+    sl.registerLazySingleton(() => ListProductItemUseCase(sl()));
+    sl.registerLazySingleton(() => CategoriesUseCase(sl()));
+    sl.registerLazySingleton(() => DeleteProductUseCase(sl()));
+    sl.registerLazySingleton(() => DeleteCategoryUseCase(sl()));
+    sl.registerLazySingleton(() => CreateCategoryUseCase(sl()));
+    sl.registerLazySingleton(() => UpdateCategoryUseCase(sl()));
+
+    // Không có dep => factory/singleton đều được
+    sl.registerLazySingleton(() => LogoutUseCase());
+
+    sl.registerLazySingleton(() => HomeBloc(sl()));
+  }
+}

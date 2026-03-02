@@ -90,7 +90,11 @@ class HomeLogoutRequested extends HomeEvent {
   const HomeLogoutRequested();
 }
 
-/// internal: clear snack message after UI consumed it
+class OpenFilter extends HomeEvent {
+  final bool showFilter;
+  const OpenFilter({this.showFilter = true});
+}
+
 class HomeMessageConsumed extends HomeEvent {
   const HomeMessageConsumed();
 }

@@ -1,2 +1,2 @@
-export 'bindings/binding.src.dart';
+export 'di/dependency_injection.dart';
 export 'bloc/controller.src.dart';

@@ -4,11 +4,10 @@ import 'package:demo_fresher_bloc/shared/widgets/show_popup.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hive/hive.dart';
-
-import '../../../generated/locales.g.dart';
 import '../../../shared/constants/const.src.dart';
 import '../../../shared/exceptions/remote/remote_exception.dart';
 import '../../router/app_router.dart';
+import '../../values/app_string.dart';
 import '../../values/key.dart';
 import '../base_reponse/server_error.dart';
 

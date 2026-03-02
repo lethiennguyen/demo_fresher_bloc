@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:stream_transform/stream_transform.dart';
 
-import '../../../../generated/locales.g.dart';
+import '../../../../core/values/app_string.dart';
 import '../../../../lib.dart';
 import '../../../detail/domain/domain.src.dart';
 import '../../../detail/presentation/event/event.src.dart';
@@ -18,10 +20,18 @@ EventTransformer<T> debounce<T>(Duration duration) {
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final HomeUseCase useCase;
   late final StreamSubscription _sub;
+  final RefreshController refreshController = RefreshController();
+  final ScrollController scrollController = ScrollController();
+
+  final TextEditingController inputSearchCtrl = TextEditingController();
+  final TextEditingController categoryCtrl = TextEditingController();
+
+  final FocusNode fcsCategory = FocusNode();
+  final FocusNode fcsSearch = FocusNode();
 
   HomeBloc(this.useCase) : super(HomeState.initial()) {
     on<HomeStarted>(_onStarted);
-    on<HomeFetchCategoriesRequested>(_onFetchCategories);
+    on<HomeFetchCategoriesRequested>(_onRefreshCategories);
     on<HomeRefreshRequested>(_onRefresh);
     on<HomeLoadMoreRequested>(_onLoadMore);
     on<HomeFilterByCategoryRequested>(_onFilterByCategory);
@@ -43,6 +53,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<HomeMessageConsumed>((event, emit) {
       emit(state.copyWith(clearMessage: true));
     });
+
+    on<OpenFilter>(onFilter);
 
     // EventBus listen (tương đương GetX onInit)
     _sub = EventBusUtils().on().listen((event) {
@@ -70,6 +82,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
   }
 
+  Future<void> _onRefreshCategories(
+      HomeFetchCategoriesRequested event, Emitter<HomeState> emit) async {
+    emit(state.copyWith(isButtonLoading: true));
+    await _onFetchCategories(event, emit);
+    emit(state.copyWith(isButtonLoading: false));
+  }
+
   Future<void> _onRefresh(
       HomeRefreshRequested event, Emitter<HomeState> emit) async {
     emit(state.copyWith(
@@ -79,10 +98,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       enablePullup: true,
       products: const [],
     ));
-
     await _fetchProducts(emit, categoryId: state.selectedCategory?.id);
 
     emit(state.copyWith(isLoading: false));
+
+    refreshController.refreshCompleted();
   }
 
   Future<void> _onLoadMore(
@@ -91,6 +111,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
     emit(state.copyWith(pageIndex: state.pageIndex + 1));
     await _fetchProducts(emit, categoryId: state.selectedCategory?.id);
+
+    refreshController.loadComplete();
   }
 
   Future<void> _onFilterByCategory(
@@ -130,20 +152,23 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       total: newTotal,
       enablePullup: hasMore,
     ));
+    if (!hasMore) {
+      emit(state.copyWith(enablePullup: false));
+      refreshController.loadNoData();
+    }
   }
 
   void _onToggleEditCategory(
       HomeToggleEditCategory event, Emitter<HomeState> emit) {
     emit(state.copyWith(
       isEditCategory: !state.isEditCategory,
-      clearErrorCategory: true,
+      errorCategory: '',
     ));
   }
 
   void _onCategorySelected(
       HomeCategorySelected event, Emitter<HomeState> emit) {
-    emit(state.copyWith(
-        selectedCategory: event.category, clearErrorCategory: true));
+    emit(state.copyWith(selectedCategory: event.category, errorCategory: ''));
   }
 
   Future<void> _onCreateCategory(
@@ -207,6 +232,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   Future<void> _onDeleteCategory(
       HomeDeleteCategoryRequested event, Emitter<HomeState> emit) async {
+    if (state.selectedCategory == null) {
+      emit(state.copyWith(errorCategory: "Hãy chọn danh mục để xóa"));
+      return;
+    }
     emit(state.copyWith(isButtonLoading: true));
     try {
       final response = await useCase.deleteCategoryUseCase
@@ -224,7 +253,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   Future<void> _onSearchChanged(
       HomeSearchChanged event, Emitter<HomeState> emit) async {
-    // debounce đã xử lý ở transformer
     emit(state.copyWith(
         keyword: event.keyword,
         isLoading: true,
@@ -242,6 +270,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     if (ok) {
       emit(state.copyWith(didLogout: true));
     }
+  }
+
+  void onFilter(OpenFilter event, Emitter<HomeState> emit) {
+    emit(state.copyWith(showFilter: !state.showFilter));
   }
 
   @override

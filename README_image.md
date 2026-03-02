@@ -17,7 +17,7 @@ dart pub global activate sds_assets_gen 1.1.8
 2. Run command:
 
 ```dart
-dart pub global activate sds_assets_gen 1.1.8
+sds_agen -s -t d --const-array --rule uwu --package --no-watch
 ```
 
 - `-t`: `f`: The type in pubsepec.yaml: `file`

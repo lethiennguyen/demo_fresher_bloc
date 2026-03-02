@@ -1,5 +1,5 @@
 class ApiUrl {
-  static const baseUrl = 'http://192.168.1.115:8080/api/v1/';
+  static const baseUrl = 'http://192.168.1.29:8080/api/v1/';
 
   /// Login
   static const login = 'login';

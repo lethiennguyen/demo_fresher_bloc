@@ -5,6 +5,9 @@ class LoginState extends Equatable {
   final String password;
   final bool isLoading;
 
+  final bool isTaxFocused;
+  final bool isUserNameFocused;
+
   /// message để UI show dialog/snackbar (one-shot)
   final String? message;
 
@@ -17,9 +20,11 @@ class LoginState extends Equatable {
     required this.isLoading,
     required this.message,
     required this.success,
+    this.isTaxFocused = false,
+    this.isUserNameFocused = false,
   });
 
-  factory LoginState.initial() => const LoginState(
+  factory LoginState.initial() => LoginState(
         username: 'cuongpc10',
         password: '123456',
         isLoading: false,
@@ -34,14 +39,17 @@ class LoginState extends Equatable {
     String? message,
     bool? success,
     bool clearMessage = false,
+    bool? isTaxFocused,
+    bool? isUserNameFocused,
   }) {
     return LoginState(
-      username: username ?? this.username,
-      password: password ?? this.password,
-      isLoading: isLoading ?? this.isLoading,
-      message: clearMessage ? null : (message ?? this.message),
-      success: success ?? this.success,
-    );
+        username: username ?? this.username,
+        password: password ?? this.password,
+        isLoading: isLoading ?? this.isLoading,
+        message: clearMessage ? null : (message ?? this.message),
+        success: success ?? this.success,
+        isTaxFocused: isTaxFocused ?? this.isTaxFocused,
+        isUserNameFocused: isUserNameFocused ?? this.isUserNameFocused);
   }
 
   @override

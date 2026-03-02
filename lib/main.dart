@@ -1,4 +1,8 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:demo_fresher_bloc/core/core.src.dart';
+import 'package:demo_fresher_bloc/feature/app/di.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -6,8 +10,10 @@ import 'package:hive_flutter/hive_flutter.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
-  setupDI();
-  runApp(MyApp());
+  await moduleDIApp();
+  runApp(
+    MyApp(),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -33,8 +39,6 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       onGenerateRoute: RouterPage.generate,
       initialRoute: AppRouter.routerSplash,
-      // BẮT BUỘC
-      locale: const Locale('vi', 'VN'),
     );
   }
 }

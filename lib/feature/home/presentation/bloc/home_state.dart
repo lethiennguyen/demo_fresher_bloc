@@ -1,8 +1,6 @@
-import 'package:demo_fresher_bloc/core/base/base.src.dart';
+import 'package:equatable/equatable.dart';
 
 import '../../domain/entities/entity.src.dart';
-
-import 'package:equatable/equatable.dart';
 
 class HomeState extends Equatable {
   final List<ProductEntity> products;
@@ -13,6 +11,7 @@ class HomeState extends Equatable {
   final int pageSize;
   final int total;
   final bool enablePullup;
+  final bool showFilter; // thay cho controller.showFilter (UI state)
 
   final bool isLoading; // tương đương showLoading()
   final bool isButtonLoading; // tương đương showButtonLoading()
@@ -36,6 +35,7 @@ class HomeState extends Equatable {
     required this.pageSize,
     required this.total,
     required this.enablePullup,
+    this.showFilter = false,
     required this.isLoading,
     required this.isButtonLoading,
     required this.isEditCategory,
@@ -45,7 +45,7 @@ class HomeState extends Equatable {
     required this.didLogout,
   });
 
-  factory HomeState.initial() => const HomeState(
+  factory HomeState.initial() => HomeState(
         products: [],
         categories: [],
         selectedCategory: null,
@@ -53,6 +53,7 @@ class HomeState extends Equatable {
         pageSize: 10,
         total: 0,
         enablePullup: true,
+        showFilter: false,
         isLoading: false,
         isButtonLoading: false,
         isEditCategory: false,
@@ -71,6 +72,7 @@ class HomeState extends Equatable {
     int? total,
     bool? enablePullup,
     bool? isLoading,
+    bool? showFilter,
     bool? isButtonLoading,
     bool? isEditCategory,
     String? errorCategory,
@@ -78,7 +80,6 @@ class HomeState extends Equatable {
     String? message,
     bool? didLogout,
     bool clearMessage = false,
-    bool clearErrorCategory = false,
   }) {
     return HomeState(
       products: products ?? this.products,
@@ -89,11 +90,11 @@ class HomeState extends Equatable {
       total: total ?? this.total,
       enablePullup: enablePullup ?? this.enablePullup,
       isLoading: isLoading ?? this.isLoading,
+      showFilter: showFilter ?? this.showFilter,
       isButtonLoading: isButtonLoading ?? this.isButtonLoading,
       isEditCategory: isEditCategory ?? this.isEditCategory,
-      errorCategory:
-          clearErrorCategory ? '' : (errorCategory ?? this.errorCategory),
       keyword: keyword ?? this.keyword,
+      errorCategory: errorCategory ?? this.errorCategory,
       message: clearMessage ? null : (message ?? this.message),
       didLogout: didLogout ?? this.didLogout,
     );
@@ -109,6 +110,7 @@ class HomeState extends Equatable {
         total,
         enablePullup,
         isLoading,
+        showFilter,
         isButtonLoading,
         isEditCategory,
         errorCategory,

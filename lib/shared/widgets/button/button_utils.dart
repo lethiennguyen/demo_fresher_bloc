@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-
-import '../../../generated/locales.g.dart';
+import '../../../core/values/app_string.dart';
 import '../../../lib.dart';
-import '../../constants/const.src.dart';
 import '../../shares.src.dart';
 
 class ButtonUtils {

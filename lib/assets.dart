@@ -6,7 +6,7 @@
 
 class Assets {
   const Assets._();
-  static const String package = 'demo_fresher_getx';
+  static const String package = 'demo_fresher_bloc';
 
   static bool isFromModules = false;
 
@@ -253,12 +253,6 @@ class Assets {
   /// {@macro assets_generator.ASSETS_IMAGES_IMG_BANNER_PNG.preview}
   static String get ASSETS_IMAGES_IMG_BANNER_PNG =>
       '${isFromModules ? "packages/$package/" : ""}assets/images/img_banner.png';
-
-  static String get ASSETS_LOCALES_EN_US_JSON =>
-      '${isFromModules ? "packages/$package/" : ""}assets/locales/en_US.json';
-
-  static String get ASSETS_LOCALES_VI_VN_JSON =>
-      '${isFromModules ? "packages/$package/" : ""}assets/locales/vi_VN.json';
 }
 
 final List<String> assetsArray = <String>[
@@ -444,6 +438,4 @@ final List<String> assetsArray = <String>[
 
   /// {@macro assets_generator.ASSETS_IMAGES_IMG_BANNER_PNG.preview}
   Assets.ASSETS_IMAGES_IMG_BANNER_PNG,
-  Assets.ASSETS_LOCALES_EN_US_JSON,
-  Assets.ASSETS_LOCALES_VI_VN_JSON,
 ];

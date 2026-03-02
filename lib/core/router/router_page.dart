@@ -27,9 +27,7 @@ class RouterPage {
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
             create: (_) => sl<LoginBloc>(),
-            child: LoginPage(
-              useCase: sl<LoginUseCase>(),
-            ),
+            child: LoginPage(),
           ),
         );
 

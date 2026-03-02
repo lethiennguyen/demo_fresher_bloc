@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../../../generated/locales.g.dart';
+import '../../../core/values/app_string.dart';
 import '../../model/input/input.src.dart';
 import '../../shares.src.dart';
 import 'input_text.dart';

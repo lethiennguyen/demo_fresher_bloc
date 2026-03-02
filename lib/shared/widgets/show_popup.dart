@@ -1,8 +1,8 @@
 import 'package:demo_fresher_bloc/core/core.src.dart';
-import 'package:demo_fresher_bloc/generated/locales.g.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../core/values/app_string.dart';
 import '../../core/values/strings.dart';
 import '../../lib.dart';
 import 'input_form/input.src.dart';
@@ -28,7 +28,7 @@ class ShowPopup {
           context,
           error,
           code: code,
-          nameAction: LocaleKeys.app_logout,
+          nameAction: LocaleKeys.dialog_logout,
           function: () {
             Navigator.pushNamedAndRemoveUntil(
               context,
@@ -140,7 +140,7 @@ class ShowPopup {
     showDialog(
       context: context,
       barrierDismissible: barrierDismissible,
-      builder: (_) => NavigatorPopHandler(
+      builder: (dialogContext) => NavigatorPopHandler(
         onPop: () => onBackPress(isActiveBack),
         child: dialog,
       ),
@@ -225,7 +225,7 @@ class ShowPopup {
                 context,
                 onComfirm ??
                     () {
-                      Navigator.pop(context);
+                      //  Navigator.of(context).pushNamed(AppRouter.routerHome);
                     },
                 buttonText,
                 color: const Color(0xffF24E1E),
