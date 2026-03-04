@@ -28,63 +28,62 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  HomeBloc get bloc => sl<HomeBloc>();
-
-  @override
-  void dispose() {
-    bloc.close();
-    super.dispose();
-  }
+  late final HomeBloc bloc;
 
   @override
   void initState() {
-    context.read<HomeBloc>().add(HomeStarted());
     super.initState();
+    bloc = sl<HomeBloc>();
+    bloc.add(HomeStarted());
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<HomeBloc, HomeState>(
-      listener: (context, state) {
-        if (state.message != null) {
-          UtilWidget.showSnackBar(
-            title: LocaleKeys.notification_title,
-            message: state.message!,
+    return BlocProvider<HomeBloc>.value(
+      value: bloc,
+      child: BlocConsumer<HomeBloc, HomeState>(
+        listener: (context, state) {
+          if (state.message != null) {
+            UtilWidget.showSnackBar(
+              context: context,
+              title: LocaleKeys.notification_title,
+              message: state.message!,
+            );
+            bloc.add(const HomeMessageConsumed());
+          }
+          if (state.didLogout) {
+            Navigator.pushNamedAndRemoveUntil(
+                context, AppRouter.routerLogin, (a) => false);
+          }
+        },
+        builder: (context, state) {
+          return Scaffold(
+            backgroundColor: AppColors.colorWhite,
+            appBar: UtilWidget.buildAppBar(
+              context,
+             LocaleKeys.app_list,
+              textColor: AppColors.mainColors,
+              showBackButton: false,
+              actions: [
+                buildIconButton(() {
+                  UtilWidget.showConfirmDialog(
+                    context,
+                    title: LocaleKeys.menu_logout,
+                    subtitle: LocaleKeys.menu_contentLogout,
+                    typeAction: AppConst.actionNotification,
+                    onCancel: () => Navigator.pop(context),
+                    onConfirm: () {
+                      context.read<HomeBloc>().add(const HomeLogoutRequested());
+                    },
+                  );
+                }, icon: Icons.login_outlined, isIcon: true),
+              ],
+            ),
+            body: _buildHomeBody(context, bloc),
+            floatingActionButton: buildFloatingActionButton(context),
           );
-          bloc.add(const HomeMessageConsumed());
-        }
-        if (state.didLogout) {
-          Navigator.pushNamedAndRemoveUntil(
-              context, AppRouter.routerLogin, (a) => true);
-        }
-      },
-      builder: (context, state) {
-        return Scaffold(
-          backgroundColor: AppColors.colorWhite,
-          appBar: UtilWidget.buildAppBar(
-            context,
-            "Danh sách",
-            textColor: AppColors.mainColors,
-            showBackButton: false,
-            actions: [
-              buildIconButton(() {
-                UtilWidget.showConfirmDialog(
-                  context,
-                  title: LocaleKeys.menu_logout,
-                  subtitle: LocaleKeys.menu_contentLogout,
-                  typeAction: AppConst.actionNotification,
-                  onCancel: () => Navigator.pop(context),
-                  onConfirm: () {
-                    context.read<HomeBloc>().add(const HomeLogoutRequested());
-                  },
-                );
-              }, icon: Icons.login_outlined, isIcon: true),
-            ],
-          ),
-          body: _buildHomeBody(context, bloc),
-          floatingActionButton: buildFloatingActionButton(context),
-        );
-      },
+        },
+      ),
     );
   }
 }

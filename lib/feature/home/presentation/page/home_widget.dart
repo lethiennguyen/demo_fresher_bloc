@@ -248,8 +248,10 @@ Widget _buildListProduct(BuildContext context, HomeBloc bloc) {
         return _buildProductCard(
           context,
           item,
-          onTap: () => Navigator.pushNamed(context, AppRouter.routerDetail,
-              arguments: item),
+          onTap: () {
+            Navigator.pushNamed(context, AppRouter.routerDetail,
+                arguments: item);
+          },
           onDelete: () {
             bloc.add(HomeDeleteProductRequested(item.id));
             Navigator.pop(context);
@@ -260,7 +262,6 @@ Widget _buildListProduct(BuildContext context, HomeBloc bloc) {
   );
 }
 
-// ===== dialogs create/update/delete category =====
 void _showDialogCreateCategory(BuildContext context, HomeBloc bloc) {
   bloc.categoryCtrl.clear();
   ShowPopup.showDiaLogTextField(
@@ -283,8 +284,8 @@ void _showDialogCreateCategory(BuildContext context, HomeBloc bloc) {
 void _showDialogUpdateCategory(BuildContext context, HomeBloc bloc) {
   if (bloc.state.selectedCategory == null) {
     // bắn lỗi lên state để UI hiện
-    // nhanh gọn: show ngay snackbar
     UtilWidget.showSnackBar(
+      context: context,
       title: LocaleKeys.notification_title,
       message: "Hãy chọn danh mục để cập nhật",
     );
@@ -315,6 +316,7 @@ void _showDialogUpdateCategory(BuildContext context, HomeBloc bloc) {
 void _showDialogDeleteCategory(BuildContext context, HomeBloc bloc) {
   if (bloc.state.selectedCategory == null) {
     UtilWidget.showSnackBar(
+      context: context,
       title: LocaleKeys.notification_title,
       message: "Hãy chọn danh mục để xóa",
     );
@@ -329,14 +331,11 @@ void _showDialogDeleteCategory(BuildContext context, HomeBloc bloc) {
     onCancel: () => Navigator.pop(context),
     onConfirm: () {
       Navigator.pop(context);
-      context
-          .read<HomeBloc>()
-          .add(HomeDeleteCategoryRequested(bloc.state.selectedCategory?.id));
+      bloc.add(HomeDeleteCategoryRequested(bloc.state.selectedCategory?.id));
     },
   );
 }
 
-// ===== floating button =====
 Widget buildFloatingActionButton(BuildContext context) {
   return GestureDetector(
     onTap: () => Navigator.pushNamed(context, AppRouter.routerDetail),

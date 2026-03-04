@@ -39,6 +39,8 @@ class LocaleKeys {
       'Tên công việc không được để trống!';
   static const String add_tasks_update_progress = 'Cập nhật tiến độ';
   static const String add_tasks_update_task = 'Cập nhật công việc';
+  static const String add_tasks_image = 'Ảnh đang trong quá trình tải';
+  static const String add_tasks_add_category = '"Thêm danh mục không thành công"';
   static const String add_tasks_update_task_failed =
       'Cập nhật công việc thất bại';
   static const String add_tasks_update_task_success = 'Cập nhật thành công';
@@ -143,6 +145,7 @@ class LocaleKeys {
   static const String app_group = 'Group';
   static const String app_hello = 'Xin chào!';
   static const String app_home = 'Trang chủ';
+  static const String app_list = 'Danh sách';
   static const String app_inputEmpty = ' không được bỏ trống!';
   static const String app_itemEmpty = '-';
   static const String app_january = 'Tháng 1';
@@ -359,7 +362,6 @@ class LocaleKeys {
   static const String login_errorDay = 'Định dạng ngày không hợp lệ';
   static const String login_errorEmail = 'Địa chỉ email không hợp lệ';
   static const String login_errorEmpty = 'Dữ liệu không được để trống!';
-  static const String login_errorIdentityCard = 'CMND/CCCD phải có 12 chữ số';
   static const String login_errorPhoneNumberType =
       'Số điện thoại phải có từ 10–20 chữ số';
   static const String login_errorTaxCodeCount =

@@ -9,9 +9,10 @@ class LoginRepoImpl extends LoginRepository {
 
   LoginRepoImpl(this.mapper, this.loginDataSources);
   @override
-  Future<ApiResponse<LoginDataEntity?>> login(LoginRequestEntity entity) async {
+  Future<BaseResponse<LoginDataEntity?>> login(
+      LoginRequestEntity entity) async {
     final response = await loginDataSources.login(entity);
-    return ApiResponse<LoginDataEntity>(
+    return BaseResponse<LoginDataEntity>(
         data: mapper.mapToEntity(response.data),
         message: response.message,
         errorKey: response.errorKey,

@@ -17,20 +17,20 @@ class HomeDI implements DIModule {
     // =========================
     // 1) MAPPERS
     // =========================
-    sl.registerLazySingleton(() => ListProductRequestMapper());
-    sl.registerLazySingleton(() => CategoryMapper());
-    sl.registerLazySingleton(() => ProductMapper());
-    sl.registerLazySingleton(() => CategoriesDataMapper());
-    sl.registerLazySingleton(() => DeleteProductsMapper());
-    sl.registerLazySingleton(() => DeleteCategoryMapper());
-    sl.registerLazySingleton(() => ProductDataMapper());
-    sl.registerLazySingleton(() => CategoryRequestMapper());
+    sl.registerFactory(() => ListProductRequestMapper());
+    sl.registerFactory(() => CategoryMapper());
+    sl.registerFactory(() => ProductMapper());
+    sl.registerFactory(() => CategoriesDataMapper());
+    sl.registerFactory(() => DeleteProductsMapper());
+    sl.registerFactory(() => DeleteCategoryMapper());
+    sl.registerFactory(() => ProductDataMapper());
+    sl.registerFactory(() => CategoryRequestMapper());
 
     // Detail mapper
-    sl.registerLazySingleton(() => DetailProductMapper(sl(), sl()));
+    sl.registerFactory(() => DetailProductMapper(sl(), sl()));
 
     // HomeMapper phụ thuộc nhiều mapper con
-    sl.registerLazySingleton(
+    sl.registerFactory(
       () => HomeMapper(
         sl(),
         // ListProductRequestMapper
@@ -51,17 +51,17 @@ class HomeDI implements DIModule {
     // =========================
     // 2) DATA SOURCES
     // =========================
-    sl.registerLazySingleton<HomeDataSources>(() => HomeDataSourcesImpl(sl()));
+    sl.registerFactory<HomeDataSources>(() => HomeDataSourcesImpl(sl()));
 
-    sl.registerLazySingleton<DetailProductDataSources>(
+    sl.registerFactory<DetailProductDataSources>(
       () => DetailProductSourceImpl(sl()),
     );
 
     // =========================
     // 3) REPOSITORIES
     // =========================
-    sl.registerLazySingleton<HomeRepository>(() => HomeRepoImpl(sl(), sl()));
-    sl.registerLazySingleton<DetailProductRepository>(
+    sl.registerFactory<HomeRepository>(() => HomeRepoImpl(sl(), sl()));
+    sl.registerFactory<DetailProductRepository>(
       () => DetailProductRepoImpl(sl()),
     );
 
@@ -69,7 +69,7 @@ class HomeDI implements DIModule {
     // 4) USE CASES
     // =========================
     // Nếu HomeUseCase constructor đúng như bạn đang truyền 7 deps
-    sl.registerLazySingleton(
+    sl.registerFactory(
       () => HomeUseCase(
         sl(),
         sl(),
@@ -81,16 +81,16 @@ class HomeDI implements DIModule {
       ),
     );
 
-    sl.registerLazySingleton(() => ListProductItemUseCase(sl()));
-    sl.registerLazySingleton(() => CategoriesUseCase(sl()));
-    sl.registerLazySingleton(() => DeleteProductUseCase(sl()));
-    sl.registerLazySingleton(() => DeleteCategoryUseCase(sl()));
-    sl.registerLazySingleton(() => CreateCategoryUseCase(sl()));
-    sl.registerLazySingleton(() => UpdateCategoryUseCase(sl()));
+    sl.registerFactory(() => ListProductItemUseCase(sl()));
+    sl.registerFactory(() => CategoriesUseCase(sl()));
+    sl.registerFactory(() => DeleteProductUseCase(sl()));
+    sl.registerFactory(() => DeleteCategoryUseCase(sl()));
+    sl.registerFactory(() => CreateCategoryUseCase(sl()));
+    sl.registerFactory(() => UpdateCategoryUseCase(sl()));
 
     // Không có dep => factory/singleton đều được
-    sl.registerLazySingleton(() => LogoutUseCase());
+    sl.registerFactory(() => LogoutUseCase());
 
-    sl.registerLazySingleton(() => HomeBloc(sl()));
+    sl.registerFactory<HomeBloc>(() => HomeBloc(sl()));
   }
 }

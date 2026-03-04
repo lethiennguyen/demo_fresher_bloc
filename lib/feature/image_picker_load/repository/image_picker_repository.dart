@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:demo_fresher_bloc/core/base/base.src.dart';
+import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../shared/constants/api_url.dart';
@@ -24,10 +25,15 @@ class ImageRepository extends BaseRepositoryBL {
       EnumRequestMethod.POST,
       urlOther: ApiUrl.urlImagePicker,
       jsonMap: await requestImage.toFormData(),
+      isToken: false,
     );
     if (res == null) {
       return null;
     }
-    return res['secure_url'];
+    final data = (res as Response).data;
+    if (data is Map<String, dynamic>) {
+      return data['secure_url'] as String?;
+    }
+    return null;
   }
 }

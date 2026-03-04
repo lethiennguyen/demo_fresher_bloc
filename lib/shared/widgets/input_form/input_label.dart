@@ -83,12 +83,6 @@ class SDSInputWithLabel extends StatelessWidget {
                     return LocaleKeys.login_errorEmail;
                   }
                   if (inputTextFormModel.inputFormatters ==
-                          InputFormatterEnum.identity &&
-                      !val.isNullOrEmpty &&
-                      !isIdentityCard(value: val)) {
-                    return LocaleKeys.login_errorIdentityCard;
-                  }
-                  if (inputTextFormModel.inputFormatters ==
                           InputFormatterEnum.taxCode &&
                       !val.isNullOrEmpty &&
                       !isTaxCode(taxCode: val)) {

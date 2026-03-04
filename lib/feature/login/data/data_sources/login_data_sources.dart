@@ -4,5 +4,5 @@ import '../../../../core/base/base.src.dart';
 import '../model/login_response_model.dart';
 
 abstract class LoginDataSources {
-  Future<ApiResponse<LoginResponseModel>> login(LoginRequestEntity entity);
+  Future<BaseResponse<LoginResponseModel>> login(LoginRequestEntity entity);
 }

@@ -18,8 +18,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   LoginBloc(this.useCase) : super(LoginState.initial()) {
     on<LoginStarted>(_onStarted);
-    on<LoginUsernameChanged>(_onUsernameChanged);
-    on<LoginPasswordChanged>(_onPasswordChanged);
+    // on<LoginUsernameChanged>(_onUsernameChanged);
+    // on<LoginPasswordChanged>(_onPasswordChanged);
     on<LoginSubmitted>(_onSubmitted);
     on<LoginMessageConsumed>((event, emit) {
       emit(state.copyWith(clearMessage: true));
@@ -27,27 +27,19 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 
   void _onStarted(LoginStarted event, Emitter<LoginState> emit) {
-    // state.initial() đã set default username/pass rồi
-  }
-
-  void _onUsernameChanged(
-      LoginUsernameChanged event, Emitter<LoginState> emit) {
-    emit(state.copyWith(username: event.username));
-  }
-
-  void _onPasswordChanged(
-      LoginPasswordChanged event, Emitter<LoginState> emit) {
-    emit(state.copyWith(password: event.password));
+    userNameController.text = "cuongpc10";
+    passWorkController.text = "123456";
   }
 
   Future<void> _onSubmitted(
       LoginSubmitted event, Emitter<LoginState> emit) async {
     emit(state.copyWith(isLoading: true, success: false));
-
     try {
+      print("userName: ${userNameController.text}");
+      print("password: ${passWorkController.text}");
       final entity = LoginRequestEntity(
-        userName: state.username.trim(),
-        passWord: state.password.trim(),
+        userName: userNameController.text.toString(),
+        passWord: passWorkController.text.toString(),
       );
 
       final response = await useCase.execute(entity);
@@ -64,6 +56,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       final box = Hive.box(HiveBoxNames.auth);
       box.put(HiveKeys.token, response.data?.accessToken);
       emit(state.copyWith(success: true));
+      print("listener success=${state.success}, loading=${state.isLoading}");
     } catch (_) {
       emit(state.copyWith(
         isLoading: false,

@@ -10,22 +10,22 @@ class DetailProductRepoImpl extends DetailProductRepository {
   DetailProductRepoImpl(this.detailProductDataSources);
 
   @override
-  Future<ApiResponse> create(ProductRequestEntity entity) async {
+  Future<BaseResponse> create(ProductRequestEntity entity) async {
     return await detailProductDataSources.createProduct(entity);
   }
 
   @override
-  Future<ApiResponse<bool>> updateProject(ProductRequestEntity entity) async {
+  Future<BaseResponse<bool>> updateProject(ProductRequestEntity entity) async {
     return await detailProductDataSources.updateProduct(entity);
   }
 
   @override
-  Future<ApiResponse> createCategory(CategoryRequestEntity entity) {
+  Future<BaseResponse> createCategory(CategoryRequestEntity entity) {
     return detailProductDataSources.createCategory(entity);
   }
 
   @override
-  Future<ApiResponse<bool>> deleteProduct(ProductRequestEntity entity) async {
+  Future<BaseResponse<bool>> deleteProduct(ProductRequestEntity entity) async {
     return await detailProductDataSources.deleteProduct(entity);
   }
 }

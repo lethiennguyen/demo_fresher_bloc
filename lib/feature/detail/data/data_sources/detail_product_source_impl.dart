@@ -13,7 +13,7 @@ class DetailProductSourceImpl extends BaseRepositoryBL
   DetailProductSourceImpl(this.mapper);
 
   @override
-  Future<ApiResponse> createProduct(ProductRequestEntity entity) async {
+  Future<BaseResponse> createProduct(ProductRequestEntity entity) async {
     final res = await baseCallApi(
       ApiUrl.products,
       EnumRequestMethod.POST,
@@ -21,13 +21,13 @@ class DetailProductSourceImpl extends BaseRepositoryBL
       isQueryParametersPost: false,
       isToken: true,
     );
-    return ApiResponse.fromJson(
+    return BaseResponse.fromJson(
       res.data,
     );
   }
 
   @override
-  Future<ApiResponse<bool>> updateProduct(ProductRequestEntity entity) async {
+  Future<BaseResponse<bool>> updateProduct(ProductRequestEntity entity) async {
     final res = await baseCallApi(
       "${ApiUrl.products}/${entity.id}",
       EnumRequestMethod.PUT,
@@ -35,13 +35,13 @@ class DetailProductSourceImpl extends BaseRepositoryBL
       isQueryParametersPost: false,
       isToken: true,
     );
-    return ApiResponse<bool>.fromJson(
+    return BaseResponse<bool>.fromJson(
       res.data,
     );
   }
 
   @override
-  Future<ApiResponse> createCategory(CategoryRequestEntity entity) async {
+  Future<BaseResponse> createCategory(CategoryRequestEntity entity) async {
     final res = await baseCallApi(
       ApiUrl.categories,
       EnumRequestMethod.POST,
@@ -49,19 +49,19 @@ class DetailProductSourceImpl extends BaseRepositoryBL
       isQueryParametersPost: false,
       isToken: true,
     );
-    return ApiResponse.fromJson(
+    return BaseResponse.fromJson(
       res.data,
     );
   }
 
   @override
-  Future<ApiResponse<bool>> deleteProduct(ProductRequestEntity entity) async {
+  Future<BaseResponse<bool>> deleteProduct(ProductRequestEntity entity) async {
     final res = await baseCallApi(
       "${ApiUrl.products}/${entity.id}",
       EnumRequestMethod.DELETE,
       isQueryParametersPost: false,
       isToken: true,
     );
-    return ApiResponse<bool>.fromJson(res.data);
+    return BaseResponse<bool>.fromJson(res.data);
   }
 }

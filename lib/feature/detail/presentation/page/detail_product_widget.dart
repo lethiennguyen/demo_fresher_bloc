@@ -51,12 +51,12 @@ Widget buildDetailImage(String imageUrl) {
   );
 }
 
-Widget buildProductDetailBody(DetailProductState controller) {
+Widget buildProductDetailBody(DetailProductBloc bloc) {
   return SingleChildScrollView(
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        buildDetailImage(controller.product?.image ?? ""),
+        buildDetailImage(bloc.state.product?.image ?? ""),
 
         sdsSBHeight20,
 
@@ -66,7 +66,7 @@ Widget buildProductDetailBody(DetailProductState controller) {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             TextUtils(
-              text: formatCurrency(controller.product?.price),
+              text: formatCurrency(bloc.state.product?.price),
               color: AppColors.mainColors,
               availableStyle:
                   StyleEnum.t24Bold, // giảm từ t28 → t24 cho cân đối
@@ -79,7 +79,7 @@ Widget buildProductDetailBody(DetailProductState controller) {
                 borderRadius: BorderRadius.circular(AppDimens.padding20),
               ),
               child: TextUtils(
-                text: "Kho: ${controller.product?.stock?.toString() ?? "0"}",
+                text: "Kho: ${bloc.state.product?.stock?.toString() ?? "0"}",
                 availableStyle: StyleEnum.t13Bold,
                 color: AppColors.mainColors,
               ),
@@ -91,13 +91,13 @@ Widget buildProductDetailBody(DetailProductState controller) {
 
         // Tên sản phẩm + mã
         TextUtils(
-          text: "Mã [${controller.product?.code ?? ""}]",
+          text: "Mã [${bloc.state.product?.code ?? ""}]",
           availableStyle: StyleEnum.t13Regular,
           color: AppColors.grey,
         ),
         sdsSBHeight4,
         TextUtils(
-          text: controller.product?.name ?? "",
+          text: bloc.state.product?.name ?? "",
           availableStyle: StyleEnum.t18Bold,
           color: AppColors.textPrimary,
           maxLine: 4,
@@ -105,18 +105,18 @@ Widget buildProductDetailBody(DetailProductState controller) {
 
         sdsSBHeight20,
         dividerBase,
-        if (controller.product?.category?.name != null)
+        if (bloc.state.product?.category?.name != null)
           buildDetailItem(
             title: "Danh mục",
-            value: controller.product?.category?.name ?? "",
+            value: bloc.state.product?.category?.name ?? "",
             isLast: true,
           ),
         sdsSBHeight16,
-        if (controller.product?.description != null &&
-            controller.product?.description != "") ...[
+        if (bloc.state.product?.description != null &&
+            bloc.state.product?.description != "") ...[
           buildDetailItem(
             title: "Mô tả",
-            value: controller.product?.description ?? "",
+            value: bloc.state.product?.description ?? "",
           ),
           sdsSBHeight12,
         ],
@@ -125,7 +125,7 @@ Widget buildProductDetailBody(DetailProductState controller) {
   );
 }
 
-Widget buildBottomBarDetail(DetailProductState controller) {
+Widget buildBottomBarDetail(BuildContext context, DetailProductBloc bloc) {
   return Container(
     decoration: BoxDecoration(
       border: Border(
@@ -143,7 +143,17 @@ Widget buildBottomBarDetail(DetailProductState controller) {
           child: ButtonUtils.buildButton(
             LocaleKeys.task_remove,
             () {
-              //controller.showDialogDelete();
+              UtilWidget.showConfirmDialog(
+                context,
+                title: "Xóa sản phẩm",
+                subtitle: "Bạn có muỗn xóa không",
+                typeAction: AppConst.actionFail,
+                onCancel: () => Navigator.pop(context),
+                onConfirm: () {
+                  Navigator.pop(context);
+                  bloc.add(DeleteProduct(bloc.state.product?.id));
+                },
+              );
             },
             backgroundColor: AppColors.basicWhite,
             showLoading: true,
@@ -161,7 +171,7 @@ Widget buildBottomBarDetail(DetailProductState controller) {
           child: ButtonUtils.buildButton(
             LocaleKeys.task_edit,
             () {
-              //controller.onEditPressed();
+              bloc.add(OnEditPressed());
             },
             backgroundColor: AppColors.mainColors,
             showLoading: true,

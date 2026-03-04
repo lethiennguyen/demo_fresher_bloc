@@ -1,8 +1,6 @@
 import 'package:equatable/equatable.dart';
 
 class LoginState extends Equatable {
-  final String username;
-  final String password;
   final bool isLoading;
 
   final bool isTaxFocused;
@@ -15,8 +13,6 @@ class LoginState extends Equatable {
   final bool success;
 
   const LoginState({
-    required this.username,
-    required this.password,
     required this.isLoading,
     required this.message,
     required this.success,
@@ -25,16 +21,12 @@ class LoginState extends Equatable {
   });
 
   factory LoginState.initial() => LoginState(
-        username: 'cuongpc10',
-        password: '123456',
         isLoading: false,
         message: null,
         success: false,
       );
 
   LoginState copyWith({
-    String? username,
-    String? password,
     bool? isLoading,
     String? message,
     bool? success,
@@ -43,8 +35,6 @@ class LoginState extends Equatable {
     bool? isUserNameFocused,
   }) {
     return LoginState(
-        username: username ?? this.username,
-        password: password ?? this.password,
         isLoading: isLoading ?? this.isLoading,
         message: clearMessage ? null : (message ?? this.message),
         success: success ?? this.success,
@@ -53,5 +43,6 @@ class LoginState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [username, password, isLoading, message, success];
+  List<Object?> get props =>
+      [isLoading, message, success, isTaxFocused, isUserNameFocused];
 }

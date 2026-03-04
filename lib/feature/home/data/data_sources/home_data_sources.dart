@@ -5,14 +5,14 @@ import '../../../detail/domain/domain.src.dart';
 import '../../domain/domain.src.dart';
 
 abstract class HomeDataSources {
-  Future<ApiResponseList<ProductItemResponseModel>> lisProductItem(
+  Future<BaseResponseList<ProductItemResponseModel>> lisProductItem(
       ListProductRequestEntity entity);
 
-  Future<ApiResponseList<CategoriesResponseModel>> categories();
+  Future<BaseResponseList<CategoriesResponseModel>> categories();
 
-  Future<ApiResponse> updateCategory(CategoryRequestEntity entity);
+  Future<BaseResponse> updateCategory(CategoryRequestEntity entity);
 
-  Future<ApiResponse<bool>> deleteCategory(DeleteCategoryEntity entity);
+  Future<BaseResponse<bool>> deleteCategory(DeleteCategoryEntity entity);
 
-  Future<ApiResponse<bool>> deleteProject(DeleteProductEntity entity);
+  Future<BaseResponse<bool>> deleteProject(DeleteProductEntity entity);
 }

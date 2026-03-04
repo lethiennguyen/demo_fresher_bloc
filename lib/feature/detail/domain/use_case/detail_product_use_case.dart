@@ -34,51 +34,51 @@ class CategoriesDetailUseCase extends NoInputUseCase<List<CategoriesEntity>> {
   }
 }
 
-class CreateProductUseCase extends UseCase<ProductRequestEntity, ApiResponse> {
+class CreateProductUseCase extends UseCase<ProductRequestEntity, BaseResponse> {
   DetailProductRepository repository;
 
   CreateProductUseCase(this.repository);
 
   @override
-  FutureOr<ApiResponse> execute(ProductRequestEntity input) async {
+  FutureOr<BaseResponse> execute(ProductRequestEntity input) async {
     final result = await repository.create(input);
     return result;
   }
 }
 
 class UpdateProductUseCase
-    extends UseCase<ProductRequestEntity, ApiResponse<bool>> {
+    extends UseCase<ProductRequestEntity, BaseResponse<bool>> {
   DetailProductRepository repository;
 
   UpdateProductUseCase(this.repository);
 
   @override
-  FutureOr<ApiResponse<bool>> execute(ProductRequestEntity input) async {
+  FutureOr<BaseResponse<bool>> execute(ProductRequestEntity input) async {
     final result = await repository.updateProject(input);
     return result;
   }
 }
 
 class DeleteProductDetailUseCase
-    extends UseCase<ProductRequestEntity, ApiResponse<bool>> {
+    extends UseCase<ProductRequestEntity, BaseResponse<bool>> {
   DetailProductRepository repository;
 
   DeleteProductDetailUseCase(this.repository);
 
   @override
-  FutureOr<ApiResponse<bool>> execute(ProductRequestEntity input) async {
+  FutureOr<BaseResponse<bool>> execute(ProductRequestEntity input) async {
     final result = await repository.deleteProduct(input);
     return result;
   }
 }
 
 class CreateCategoryUseCase
-    extends UseCase<CategoryRequestEntity, ApiResponse> {
+    extends UseCase<CategoryRequestEntity, BaseResponse> {
   DetailProductRepository repository;
   CreateCategoryUseCase(this.repository);
 
   @override
-  FutureOr<ApiResponse> execute(CategoryRequestEntity input) async {
+  FutureOr<BaseResponse> execute(CategoryRequestEntity input) async {
     final result = await repository.createCategory(input);
     return result;
   }

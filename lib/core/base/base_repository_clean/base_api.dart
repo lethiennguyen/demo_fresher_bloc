@@ -6,10 +6,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:hive/hive.dart';
 import '../../../shared/constants/const.src.dart';
 import '../../../shared/exceptions/remote/remote_exception.dart';
+import '../../core.src.dart';
 import '../../router/app_router.dart';
 import '../../values/app_string.dart';
 import '../../values/key.dart';
 import '../base_reponse/server_error.dart';
+import 'navigation_service.dart';
 
 class EnumRequestMethod {
   ///các type request API
@@ -63,7 +65,6 @@ class BaseApi {
   }
 
   late Function(Object error) onErrorCallBack;
-  late BuildContext context;
 
   /// [isQueryParametersPost]: `true`: phương thức post gửi params, mặc định = `false`
   ///
@@ -94,8 +95,8 @@ class BaseApi {
 
     final String url = urlOther ?? (ApiUrl.baseUrl + action);
 
-    final Map<String, String> headers =
-        headersUrlOther ?? await getBaseHeader();
+    final Map<String, String> headers = headersUrlOther ??
+        (isToken ? await getBaseHeader() : <String, String>{});
     final Options options = isDownload
         ? Options(
             headers: headers,
@@ -162,7 +163,7 @@ class BaseApi {
         final Map<String, dynamic> body = response.data;
 
         if (body['status_code'] == 401) {
-          await _handleUnauthorized(context);
+          await _handleUnauthorized();
         }
       }
 
@@ -176,7 +177,11 @@ class BaseApi {
 
       // Nếu HTTP 401 thật
       if (e is DioException && e.response?.statusCode == 401) {
-        await _handleUnauthorized(context);
+        if (functionError != null) {
+          functionError(remoteException);
+        } else {
+          await _handleUnauthorized();
+        }
       }
 
       throw remoteException;
@@ -185,7 +190,7 @@ class BaseApi {
 
   static bool _isRedirecting = false;
 
-  static Future<void> _handleUnauthorized(BuildContext context) async {
+  static Future<void> _handleUnauthorized() async {
     if (_isRedirecting) return;
     _isRedirecting = true;
 
@@ -196,20 +201,17 @@ class BaseApi {
       _isRedirecting = false;
     });
 
-    ShowPopup.showDiaLogNotifyton(context, LocaleKeys.notification_title,
-        LocaleKeys.app_error401, LocaleKeys.button_confirm, isActiveBack: true,
-        () {
-      Navigator.pushNamedAndRemoveUntil(
-          context, AppRouter.routerLogin, (route) => false);
-    });
-  }
+    final nav = sl<NavigationService>();
 
-  // dynamic showDialogError(dynamic e) {
-  //   if (e.response != null && e.response is Map) {
-  //     return e.response;
-  //   }
-  //   onErrorCallBack(e);
-  // }
+    await nav.showAppDialog(
+      title: LocaleKeys.notification_title,
+      message: LocaleKeys.app_error401,
+      confirmText: LocaleKeys.button_confirm,
+      onConfirm: () {
+        nav.goToLoginAndClear();
+      },
+    );
+  }
 
   RemoteException _buildDioException(Object? exception) {
     if (exception is RemoteException) {

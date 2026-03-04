@@ -12,7 +12,7 @@ class HomeDataSourcesImpl extends BaseRepositoryBL implements HomeDataSources {
   HomeDataSourcesImpl(this.mapper);
 
   @override
-  Future<ApiResponseList<ProductItemResponseModel>> lisProductItem(
+  Future<BaseResponseList<ProductItemResponseModel>> lisProductItem(
       ListProductRequestEntity entity) async {
     final res = await baseCallApi(
       ApiUrl.products,
@@ -21,48 +21,48 @@ class HomeDataSourcesImpl extends BaseRepositoryBL implements HomeDataSources {
       isQueryParametersPost: true,
       isToken: true,
     );
-    return ApiResponseList<ProductItemResponseModel>.fromJson(
+    return BaseResponseList<ProductItemResponseModel>.fromJson(
       res.data,
       func: (res) => ProductItemResponseModel.fromJson(res),
     );
   }
 
   @override
-  Future<ApiResponseList<CategoriesResponseModel>> categories() async {
+  Future<BaseResponseList<CategoriesResponseModel>> categories() async {
     final res = await baseCallApi(
       ApiUrl.categories,
       EnumRequestMethod.GET,
       isToken: true,
     );
-    return ApiResponseList<CategoriesResponseModel>.fromJson(
+    return BaseResponseList<CategoriesResponseModel>.fromJson(
       res.data,
       func: (res) => CategoriesResponseModel.fromJson(res),
     );
   }
 
   @override
-  Future<ApiResponse<bool>> deleteProject(DeleteProductEntity entity) async {
+  Future<BaseResponse<bool>> deleteProject(DeleteProductEntity entity) async {
     final res = await baseCallApi(
       "${ApiUrl.delete}/${entity.id}",
       EnumRequestMethod.DELETE,
       jsonMap: mapper.deleteProductsMapper.mapToData(entity).toJson(),
       isToken: true,
     );
-    return ApiResponse<bool>.fromJson(res.data);
+    return BaseResponse<bool>.fromJson(res.data);
   }
 
   @override
-  Future<ApiResponse<bool>> deleteCategory(DeleteCategoryEntity entity) async {
+  Future<BaseResponse<bool>> deleteCategory(DeleteCategoryEntity entity) async {
     final res = await baseCallApi(
       "${ApiUrl.categories}/${entity.id}",
       EnumRequestMethod.DELETE,
       isToken: true,
     );
-    return ApiResponse<bool>.fromJson(res.data);
+    return BaseResponse<bool>.fromJson(res.data);
   }
 
   @override
-  Future<ApiResponse> updateCategory(CategoryRequestEntity entity) async {
+  Future<BaseResponse> updateCategory(CategoryRequestEntity entity) async {
     final res = await baseCallApi(
       "${ApiUrl.categories}/${entity.id}",
       EnumRequestMethod.PUT,
@@ -70,7 +70,7 @@ class HomeDataSourcesImpl extends BaseRepositoryBL implements HomeDataSources {
       isQueryParametersPost: false,
       isToken: true,
     );
-    return ApiResponse.fromJson(
+    return BaseResponse.fromJson(
       res.data,
     );
   }

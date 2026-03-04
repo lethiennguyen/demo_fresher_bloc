@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 import '../../../core/values/app_string.dart';
 import '../../../lib.dart';
@@ -92,10 +93,20 @@ class UtilWidget {
     );
   }
 
-  static Widget showSnackBar({required String title, required String message}) {
-    return SnackBar(
+  static void showSnackBar({
+    required BuildContext context,
+    required String title,
+    required String message,
+  }) {
+    final snackBar = SnackBar(
+      duration: const Duration(seconds: 2),
       behavior: SnackBarBehavior.floating,
-      margin: const EdgeInsets.all(12),
+      margin: EdgeInsets.only(
+        top: 20,
+        left: 12,
+        right: 12,
+        bottom: MediaQuery.of(context).size.height * 0.8,
+      ),
       backgroundColor: AppColors.colorWhite,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
@@ -130,7 +141,46 @@ class UtilWidget {
         ],
       ),
     );
+
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(snackBar);
   }
+
+  // static void showSnackBar({
+  //   required BuildContext context,
+  //   required String title,
+  //   required String message,
+  // }) {
+  //   showTopSnackBar(
+  //     Overlay.of(context),
+  //     Material(
+  //       child: Container(
+  //         padding: const EdgeInsets.all(16),
+  //         margin: const EdgeInsets.all(12),
+  //         decoration: BoxDecoration(
+  //           color: Colors.white,
+  //           borderRadius: BorderRadius.circular(8),
+  //           border: Border.all(color: AppColors.grey),
+  //         ),
+  //         child: Row(
+  //           children: [
+  //             Icon(Icons.emoji_emotions, color: AppColors.mainColors),
+  //             const SizedBox(width: 8),
+  //             Column(
+  //               crossAxisAlignment: CrossAxisAlignment.start,
+  //               children: [
+  //                 Text(title,
+  //                     style: const TextStyle(fontWeight: FontWeight.bold)),
+  //                 Text(message),
+  //               ],
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   static Future<T?> _showDialog<T>(
     BuildContext context,
@@ -1001,6 +1051,86 @@ class UtilWidget {
     );
   }
 
+  static Widget baseDropDownBottomSheetFilter(
+    BuildContext context, {
+    String? title,
+    String? value,
+    Function? onTap,
+    Color? backgroundColor,
+    Color? textColor,
+    Color? textColorLabel,
+    Color? iconColor,
+    Color? borderColor,
+    Widget? icon,
+    double? width,
+    double? height,
+    double? borderRadius,
+    StyleEnum? styleEnum,
+    bool isTitle = true,
+  }) {
+    return UtilWidget.baseCard(
+      padding: EdgeInsets.zero,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          isTitle
+              ? TextUtils(
+                  text: title ?? "",
+                  color: textColorLabel ?? AppColors.colorBlack,
+                  availableStyle: StyleEnum.t16Bold,
+                )
+              : const SizedBox(),
+          sdsSBHeight8,
+          InkWell(
+            onTap: () {
+              onTap?.call();
+            },
+            child: Container(
+              height: height ?? 50.mulSF(context),
+              width: width ?? MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                color: backgroundColor ?? AppColors.basicGrey5,
+                borderRadius: BorderRadius.circular(
+                    borderRadius ?? AppDimens.borderRadiusBigger),
+                border: Border.all(
+                    color: borderColor ?? AppColors.grey2,
+                    style: BorderStyle.solid,
+                    width: 0.8),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Row(
+                      children: [
+                        // Icon(
+                        //   icon,
+                        //   color: iconColor,
+                        // ),
+                        icon ?? const SizedBox(),
+                        sdsSBWidth8,
+                        TextUtils(
+                          text: value ?? "",
+                          availableStyle: styleEnum ?? StyleEnum.t16Regular,
+                          color: textColor ?? AppColors.basicBlack,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Icon(
+                    Icons.arrow_drop_down,
+                    size: AppDimens.sizeIcon24,
+                    color: iconColor ?? AppColors.basicBlack,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   static PreferredSizeWidget buildAppBar(BuildContext context, String title,
       {Color? textColor,
       Color? actionsIconColor,
@@ -1145,7 +1275,7 @@ class UtilWidget {
 
   static List<Widget> _buildShimmerList() {
     return List.generate(
-      6,
+      8,
       (index) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: Shimmer.fromColors(
@@ -1159,6 +1289,7 @@ class UtilWidget {
               color: Colors.white,
               borderRadius: BorderRadius.circular(12),
             ),
+            child: TextUtils(text: "aaaaaaaaaaaa"),
           ),
         ),
       ),

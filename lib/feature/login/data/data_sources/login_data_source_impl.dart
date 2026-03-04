@@ -13,7 +13,7 @@ class LoginDataSourcesImpl extends BaseRepositoryBL
   LoginDataSourcesImpl(this.mapper);
 
   @override
-  Future<ApiResponse<LoginResponseModel>> login(
+  Future<BaseResponse<LoginResponseModel>> login(
       LoginRequestEntity entity) async {
     try {
       final res = await baseCallApi(
@@ -23,13 +23,13 @@ class LoginDataSourcesImpl extends BaseRepositoryBL
         isQueryParametersPost: false,
         isToken: false,
       );
-      return ApiResponse<LoginResponseModel>.fromJson(
+      return BaseResponse<LoginResponseModel>.fromJson(
         res.data,
         func: (res) => LoginResponseModel.fromJson(res),
       );
     } on Exception catch (e) {
       print(e);
-      return ApiResponse<LoginResponseModel>.fromJson({"data": e});
+      return BaseResponse<LoginResponseModel>.fromJson({"data": e});
     }
   }
 }

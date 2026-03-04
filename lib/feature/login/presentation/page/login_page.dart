@@ -24,14 +24,13 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  LoginBloc get bloc => sl<LoginBloc>();
+  late final LoginBloc bloc;
 
   @override
   void initState() {
     super.initState();
-    final init = LoginState.initial();
-    bloc.userNameController.text = init.username;
-    bloc.passWorkController.text = init.password;
+    bloc = sl<LoginBloc>();
+    bloc.add(LoginStarted());
   }
 
   @override
@@ -42,42 +41,40 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<LoginBloc, LoginState>(
-      listener: (context, state) {
-        if (state.message != null) {
-          ShowPopup.showDiaLogNotifyton(
-            context,
-            LocaleKeys.notification_title,
-            state.message!,
-            LocaleKeys.button_confirm,
-            null,
+    return BlocProvider<LoginBloc>.value(
+      value: bloc,
+      child: BlocConsumer<LoginBloc, LoginState>(
+        listener: (context, state) {
+          if (state.message != null) {
+            ShowPopup.showDiaLogNotifyton(
+              context,
+              LocaleKeys.notification_title,
+              state.message!,
+              LocaleKeys.button_confirm,
+              null,
+            );
+          }
+          if (state.success) {
+            Navigator.pushNamedAndRemoveUntil(
+                context, AppRouter.routerHome, (a) => false);
+          }
+        },
+        builder: (context, state) {
+          return Scaffold(
+            backgroundColor: AppColors.colorWhite,
+            body: Center(child: _formLogin(context, bloc)),
           );
-        }
-        if (state.success) {
-          Navigator.pushNamedAndRemoveUntil(
-              context, AppRouter.routerHome, (a) => true);
-        }
-      },
-      builder: (context, state) {
-        return Scaffold(
-          backgroundColor: AppColors.colorWhite,
-          body: Center(child: _formLogin(context, state)),
-        );
-      },
+        },
+      ),
     );
   }
 
-  Widget _formLogin(BuildContext context, LoginState state) {
+  Widget _formLogin(BuildContext context, LoginBloc bloc) {
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          sdsSBHeight20,
-          sdsSBHeight20,
-          sdsSBHeight20,
-          sdsSBHeight20,
-
           /// Username
           buildFieldLoginForm(
             title: LocaleKeys.login_inputUsername,
@@ -98,22 +95,22 @@ class _LoginPageState extends State<LoginPage> {
               currentNode: bloc.passwordFocus,
               obscureText: true,
               onEditingComplete: () {
-                context.read<LoginBloc>().add(const LoginSubmitted());
+                bloc.add(const LoginSubmitted());
               }),
 
           sdsSBHeight20,
-          _formButtonSubmit(context, state),
+          _formButtonSubmit(context, bloc),
         ],
       ).paddingSymmetric(horizontal: 16),
     );
   }
 
-  Widget _formButtonSubmit(BuildContext context, LoginState state) {
+  Widget _formButtonSubmit(BuildContext context, LoginBloc bloc) {
     return ButtonUtils.buildButton(
       LocaleKeys.login_login,
-      () => bloc.add(LoginSubmitted()),
+      () => bloc.add(const LoginSubmitted()),
       backgroundColor: AppColors.mainColors,
-      isLoading: state.isLoading,
+      isLoading: bloc.state.isLoading,
       showLoading: true,
       colorText: AppColors.basicWhite,
       height: AppDimens.btnMedium,

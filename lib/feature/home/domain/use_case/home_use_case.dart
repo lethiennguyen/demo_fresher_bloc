@@ -51,33 +51,33 @@ class CategoriesUseCase extends NoInputUseCase<List<CategoriesEntity>> {
 }
 
 class DeleteProductUseCase
-    extends UseCase<DeleteProductEntity, ApiResponse<bool>> {
+    extends UseCase<DeleteProductEntity, BaseResponse<bool>> {
   HomeRepository homeRepository;
   DeleteProductUseCase(this.homeRepository);
   @override
-  FutureOr<ApiResponse<bool>> execute(DeleteProductEntity input) async {
+  FutureOr<BaseResponse<bool>> execute(DeleteProductEntity input) async {
     final result = await homeRepository.deleteProduct(input);
     return result;
   }
 }
 
 class DeleteCategoryUseCase
-    extends UseCase<DeleteCategoryEntity, ApiResponse<bool>> {
+    extends UseCase<DeleteCategoryEntity, BaseResponse<bool>> {
   HomeRepository homeRepository;
   DeleteCategoryUseCase(this.homeRepository);
   @override
-  FutureOr<ApiResponse<bool>> execute(DeleteCategoryEntity input) async {
+  FutureOr<BaseResponse<bool>> execute(DeleteCategoryEntity input) async {
     final result = await homeRepository.deleteCategory(input);
     return result;
   }
 }
 
 class UpdateCategoryUseCase
-    extends UseCase<CategoryRequestEntity, ApiResponse> {
+    extends UseCase<CategoryRequestEntity, BaseResponse> {
   HomeRepository homeRepository;
   UpdateCategoryUseCase(this.homeRepository);
   @override
-  FutureOr<ApiResponse> execute(CategoryRequestEntity input) async {
+  FutureOr<BaseResponse> execute(CategoryRequestEntity input) async {
     final result = await homeRepository.updateCategory(input);
     return result;
   }

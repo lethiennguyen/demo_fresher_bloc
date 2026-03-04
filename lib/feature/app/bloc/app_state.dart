@@ -7,6 +7,7 @@ class AppState extends BaseState {
     super.isButtonLoading,
     super.isOverlayLoading,
     super.errorMessage,
+    super.message,
   });
 
   @override
@@ -15,12 +16,14 @@ class AppState extends BaseState {
     bool? isLoading,
     bool? isOverlayLoading,
     bool? isButtonLoading,
+    String? message,
   }) {
     return AppState(
       errorMessage: errorMessage ?? this.errorMessage,
       isLoading: isLoading ?? this.isLoading,
       isOverlayLoading: isOverlayLoading ?? this.isOverlayLoading,
       isButtonLoading: isButtonLoading ?? this.isButtonLoading,
+      message: message ?? this.message,
     );
   }
 }
