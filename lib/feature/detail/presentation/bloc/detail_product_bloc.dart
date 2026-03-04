@@ -69,9 +69,9 @@ class DetailProductBloc
   Future<void> _onInit(
       DetailStarted event, Emitter<DetailProductState> emit) async {
     emit(state.copyWith(product: entity));
+    add(FetchCategory());
     if (entity == null) {
       emit(state.copyWith(isDetail: false));
-      add(FetchCategory());
       add(DetailCreateStarted());
       return;
     }
@@ -82,19 +82,24 @@ class DetailProductBloc
 
   Future<void> _onFetchCategory(
       FetchCategory event, Emitter<DetailProductState> emit) async {
-    final result = await useCase.categoriesUseCase.execute();
+    emit(state.copyWith(isLoading: true));
+    try {
+      final result = await useCase.categoriesUseCase.execute();
 
-    if (result.isNotEmpty) {
-      emit(state.copyWith(listCategory: []));
-      final updated = List<CategoriesEntity>.from(state.listCategory ?? [])
-        ..addAll(result);
-      emit(state.copyWith(listCategory: updated));
-      return;
+      if (result.isNotEmpty) {
+        emit(state.copyWith(listCategory: []));
+        final updated = List<CategoriesEntity>.from(state.listCategory ?? [])
+          ..addAll(result);
+        emit(state.copyWith(listCategory: updated));
+        return;
+      }
+      emit(state.copyWith(
+        message: "Lấy danh mục không thành công",
+        messageId: DateTime.now().millisecondsSinceEpoch,
+      ));
+    } finally {
+      emit(state.copyWith(isLoading: false));
     }
-    emit(state.copyWith(
-      message: "Lấy danh mục không thành công",
-      messageId: DateTime.now().millisecondsSinceEpoch,
-    ));
   }
 
   Future<void> upImage(UpImage event, Emitter<DetailProductState> emit) async {
@@ -342,36 +347,36 @@ class DetailProductBloc
 
   String? validateName(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return "Vui lòng nhập tên sản phẩm";
+      return LocaleKeys.product_validate_name_empty;
     }
     if (value.trim().length < 3) {
-      return "Tên phải có ít nhất 3 ký tự";
+      return LocaleKeys.product_validate_name_min_length;
     }
     return null;
   }
 
   String? validateCode(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return "Vui lòng nhập mã sản phẩm";
+      return LocaleKeys.product_validate_code_empty;
     }
     if (value.trim().length < 3) {
-      return "Mã sản phẩm quá ngắn";
+      return LocaleKeys.product_validate_code_min_length;
     }
     return null;
   }
 
   String? validatePrice(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return "Vui lòng nhập giá sản phẩm";
+      return LocaleKeys.product_validate_price_empty;
     }
 
     final price = double.tryParse(value.replaceAll(',', '').trim());
     if (price == null) {
-      return "Giá phải là số hợp lệ";
+      return LocaleKeys.product_validate_price_invalid;
     }
 
     if (price <= 0) {
-      return "Giá phải lớn hơn 0";
+      return LocaleKeys.product_validate_price_positive;
     }
 
     return null;
@@ -379,16 +384,16 @@ class DetailProductBloc
 
   String? validateStock(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return "Vui lòng nhập số lượng";
+      return LocaleKeys.product_validate_stock_empty;
     }
 
     final stock = int.tryParse(value.trim());
     if (stock == null) {
-      return "Số lượng phải là số nguyên";
+      return LocaleKeys.product_validate_stock_invalid;
     }
 
     if (stock < 0) {
-      return "Số lượng không được âm";
+      return LocaleKeys.product_validate_stock_negative;
     }
 
     return null;
@@ -396,7 +401,7 @@ class DetailProductBloc
 
   String? validateCategory(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return "Vui lòng nhập danh mục";
+      return LocaleKeys.product_validate_category_empty;
     }
     return null;
   }

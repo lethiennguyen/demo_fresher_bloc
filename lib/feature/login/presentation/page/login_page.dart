@@ -71,37 +71,47 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _formLogin(BuildContext context, LoginBloc bloc) {
     return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          /// Username
-          buildFieldLoginForm(
-            title: LocaleKeys.login_inputUsername,
-            hintText: LocaleKeys.login_hintPassword,
-            svgIconLeading: Assets.ASSETS_ICONS_LOGIN_USER_ICON_SVG,
-            isFocusedRx: bloc.state.isTaxFocused,
-            currentNode: bloc.userNameFocus,
-            controller: bloc.userNameController,
-          ),
+      child: Form(
+        key: bloc.formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextUtils(
+              text: "Demo bloc",
+              availableStyle: StyleEnum.t28Bold,
+            ),
 
-          /// Password
-          buildFieldLoginForm(
-              title: LocaleKeys.login_inputPassword,
+            /// Username
+            buildFieldLoginForm(
+              validator: bloc.userName,
+              title: LocaleKeys.login_inputUsername,
               hintText: LocaleKeys.login_hintPassword,
-              svgIconLeading: Assets.ASSETS_ICONS_IC_PASSWORD_SVG,
-              isFocusedRx: bloc.state.isUserNameFocused,
-              controller: bloc.passWorkController,
-              currentNode: bloc.passwordFocus,
-              obscureText: true,
-              onEditingComplete: () {
-                bloc.add(const LoginSubmitted());
-              }),
+              svgIconLeading: Assets.ASSETS_ICONS_LOGIN_USER_ICON_SVG,
+              isFocusedRx: bloc.state.isTaxFocused,
+              currentNode: bloc.userNameFocus,
+              controller: bloc.userNameController,
+            ),
 
-          sdsSBHeight20,
-          _formButtonSubmit(context, bloc),
-        ],
-      ).paddingSymmetric(horizontal: 16),
+            /// Password
+            buildFieldLoginForm(
+                validator: bloc.password,
+                title: LocaleKeys.login_inputPassword,
+                hintText: LocaleKeys.login_hintPassword,
+                svgIconLeading: Assets.ASSETS_ICONS_IC_PASSWORD_SVG,
+                isFocusedRx: bloc.state.isUserNameFocused,
+                controller: bloc.passWorkController,
+                currentNode: bloc.passwordFocus,
+                obscureText: true,
+                onEditingComplete: () {
+                  bloc.add(const LoginSubmitted());
+                }),
+
+            sdsSBHeight20,
+            _formButtonSubmit(context, bloc),
+          ],
+        ).paddingSymmetric(horizontal: 16),
+      ),
     );
   }
 

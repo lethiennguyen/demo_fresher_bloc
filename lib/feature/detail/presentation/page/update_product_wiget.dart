@@ -54,7 +54,7 @@ Widget buildImagePicker(DetailProductBloc bloc) {
                         ),
                         SizedBox(height: 10),
                         Text(
-                          "Thêm ảnh",
+                          LocaleKeys.product_add_image,
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
@@ -105,8 +105,8 @@ Widget buildNameProduct(DetailProductBloc bloc) {
     heightInput: AppDimens.height45,
     textEditingController: bloc.inputNameCtrl,
     currentNode: bloc.fcsName,
-    hintText: "Tên sản phẩm",
-    title: "Tên sản phẩm",
+    hintText: LocaleKeys.product_name,
+    title: LocaleKeys.product_name,
     borderRadius: AppDimens.borderRadiusBig,
     paddingBottom: 0,
     isValidate: false,
@@ -121,8 +121,8 @@ Widget buildCodeProduct(DetailProductBloc bloc) {
     heightInput: AppDimens.height45,
     textEditingController: bloc.inputCodeCtrl,
     currentNode: bloc.fcsCode,
-    hintText: "Mã code sản phẩm",
-    title: "Mã code sản phẩm",
+    hintText: LocaleKeys.product_code,
+    title: LocaleKeys.product_code,
     borderRadius: AppDimens.borderRadiusBig,
     paddingBottom: 0,
     isValidate: false,
@@ -137,8 +137,8 @@ Widget buildPriceProduct(DetailProductBloc bloc) {
     heightInput: AppDimens.height45,
     textEditingController: bloc.inputPriceCtrl,
     currentNode: bloc.fcsPrice,
-    title: "Giá sản phẩm",
-    hintText: "Giá sản phẩm (VND)",
+    title: LocaleKeys.product_price,
+    hintText: LocaleKeys.product_price_hint,
     borderRadius: AppDimens.borderRadiusBig,
     textInputType: TextInputType.number,
     paddingBottom: 0,
@@ -154,8 +154,8 @@ Widget buildStockProduct(DetailProductBloc bloc) {
     heightInput: AppDimens.height45,
     textEditingController: bloc.inputStockCtrl,
     currentNode: bloc.fcsStock,
-    title: "Số lượng sản phẩm",
-    hintText: "Số lượng sản phẩm",
+    title: LocaleKeys.product_stock,
+    hintText: LocaleKeys.product_stock,
     borderRadius: AppDimens.borderRadiusBig,
     textInputType: TextInputType.number,
     paddingBottom: 0,
@@ -167,7 +167,7 @@ Widget buildStockProduct(DetailProductBloc bloc) {
 
 Widget buildDescriptionProduct(DetailProductBloc bloc) {
   return IconLeadingTextField(
-    label: "Mô tả",
+    label: LocaleKeys.product_description,
     controller: bloc.descriptionCtrl,
     backgroundColor: AppColors.basicWhite,
   );
@@ -181,13 +181,14 @@ Widget buildCategoryProduct(BuildContext context, DetailProductBloc bloc) {
       selectedValue == null ? AppColors.basicBlack : AppColors.mainColors;
   return UtilWidget.baseDropDownBottomSheetFilter(context,
       height: AppDimens.height45,
-      title: "Danh mục sản phẩm",
+      title: LocaleKeys.product_category,
       borderColor: color,
       iconColor: textColor,
       textColor: textColor,
       backgroundColor:
           selectedValue == null ? AppColors.basicGrey5 : AppColors.basicWhite,
-      value: selectedValue?.name ?? "Danh mục", onTap: () async {
+      value: selectedValue?.name ?? LocaleKeys.product_category_default,
+      onTap: () async {
     final result = await showModalBottomSheet(
       context: context,
       backgroundColor: AppColors.basicWhite,
@@ -214,20 +215,20 @@ Widget buildBottomSheetCategoryProduct(
     height: MediaQuery.of(context).size.height * 0.7,
     child: UtilWidget.buildSelectionBottomSheet(
       context,
-      title: "Chọn danh mục",
+      title: LocaleKeys.product_select_category,
       items: bloc.state.listCategory ?? [],
       isAddItem: true,
-      addItem: "Thêm danh mục +",
+      addItem: LocaleKeys.product_add_category_plus,
       onTap: () {
         ShowPopup.showDiaLogTextField(
           context,
-          "Thêm Danh mục",
-          "Lưu",
+          LocaleKeys.product_add_category_title,
+          LocaleKeys.app_save,
           onConfirm: () {
             bloc.add(CreateCategory());
             Navigator.pop(context);
           },
-          hintText: "Danh mục mới",
+          hintText: LocaleKeys.product_new_category_hint,
           isActiveBack: true,
           bloc.inputCategoryCtrl,
           bloc.fcsCategory,
@@ -261,7 +262,7 @@ Widget buildBottomBar(DetailProductBloc bloc) {
         Spacer(),
         ButtonUtils.buildButton(
           width: 120,
-          "Lưu",
+          LocaleKeys.app_save,
           () {
             bloc.add(ProductUpdateOrCreate());
           },

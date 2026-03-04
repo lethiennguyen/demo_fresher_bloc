@@ -80,7 +80,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
       backgroundColor: AppColors.basicWhite,
       appBar: UtilWidget.buildAppBar(
         context,
-        "Chi tiết",
+        bloc.title,
         centerTitle: true,
         backButtonColor: AppColors.basicBlack,
         textColor: AppColors.mainColors,

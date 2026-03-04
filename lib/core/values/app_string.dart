@@ -40,7 +40,8 @@ class LocaleKeys {
   static const String add_tasks_update_progress = 'Cập nhật tiến độ';
   static const String add_tasks_update_task = 'Cập nhật công việc';
   static const String add_tasks_image = 'Ảnh đang trong quá trình tải';
-  static const String add_tasks_add_category = '"Thêm danh mục không thành công"';
+  static const String add_tasks_add_category =
+      '"Thêm danh mục không thành công"';
   static const String add_tasks_update_task_failed =
       'Cập nhật công việc thất bại';
   static const String add_tasks_update_task_success = 'Cập nhật thành công';
@@ -404,6 +405,12 @@ class LocaleKeys {
   static const String my_task_all = 'Tất cả';
   static const String my_task_completed_ahead_of_schedule =
       'Hoàn thành trước hạn';
+  static const String product_stock_label = 'Kho:';
+  static const String product_code_label = 'Mã';
+  static const String product_delete_title = 'Xóa sản phẩm';
+  static const String product_delete_confirm =
+      'Bạn có chắc chắn muốn xóa không?';
+  // ... and other product keys
   static const String my_task_completed_late = 'Hoàn thành trễ hạn';
   static const String my_task_completed_on_time = 'Hoàn thành đúng hạn';
   static const String my_task_confirm = 'Xác nhận';
@@ -686,29 +693,45 @@ class LocaleKeys {
   static const String thisWeek = 'Tuần này';
   static const String thisYear = 'Năm nay';
   static const String today = 'Hôm nay';
-  static const String util_text_accept = 'Đồng ý';
-  static const String util_text_acceptance = 'Phê duyệt';
-  static const String util_text_cancel = 'Hủy';
-  static const String util_text_cancelFilter = 'Hủy lọc';
-  static const String util_text_chooseNotification = 'Chọn thông báo';
-  static const String util_text_close = 'Đóng';
-  static const String util_text_confirm = 'Xác nhận';
-  static const String util_text_contact = 'Liên hệ';
-  static const String util_text_doNotBrowse = 'Không duyệt';
-  static const String util_text_done = 'Hoàn tất';
-  static const String util_text_emptyData = 'Không có dữ liệu';
-  static const String util_text_errorDay = 'Định dạng ngày không hợp lệ';
-  static const String util_text_errorEmail = 'Email không hợp lệ';
-  static const String util_text_error_contact = 'Không thể thực hiện cuộc gọi';
-  static const String util_text_fromHourText = 'Từ giờ';
-  static const String util_text_hintSearch = 'Tìm kiếm';
-  static const String util_text_productDetailNotEmpty =
-      'Thông tin không được để trống';
-  static const String util_text_selectDay = 'Chọn ngày';
-  static const String util_text_timeText = 'Thời gian';
-  static const String util_text_toHourText = 'Đến giờ';
-  static const String week = 'Tuần';
-  static const String wholeYear = 'Cả năm';
-  static const String year = 'Năm';
-  static const String yearsAgo = 'năm trước';
+
+  static const String product_add_image = 'Thêm ảnh';
+  static const String product_name = 'Tên sản phẩm';
+  static const String product_code = 'Mã code sản phẩm';
+  static const String product_price = 'Giá sản phẩm';
+  static const String product_price_hint = 'Giá sản phẩm (VND)';
+  static const String product_stock = 'Số lượng sản phẩm';
+  static const String product_description = 'Mô tả';
+  static const String product_category = 'Danh mục sản phẩm';
+  static const String product_delete_category = 'Xóa danh mục';
+  static const String product_delete_category_title = "Bạn có muỗn xóa không";
+  static const String product_category_default = 'Danh mục';
+  static const String product_select_category = 'Chọn danh mục';
+  static const String product_add_category_plus = 'Thêm danh mục +';
+  static const String product_add_category_title = 'Thêm Danh mục';
+  static const String product_new_category_hint = 'Danh mục mới';
+  static const String update = 'Cập nhật';
+  static const String product_delete_category_hint = "Hãy chọn danh mục để xóa";
+  static const String new_category = 'Danh mục mới';
+  static const String add_new_category = "Hãy chọn danh mục để cập nhật";
+  static const String add_update_category = "Tạo danh mục";
+  static const String update_category = "Cập nhật danh mục";
+  static const String lower_it_again = "Thiết lập lại";
+  static const String edit = "Chỉnh sửa";
+  static const String product_validate_name_empty =
+      'Vui lòng nhập tên sản phẩm';
+  static const String product_validate_name_min_length =
+      'Tên phải có ít nhất 3 ký tự';
+  static const String product_validate_code_empty = 'Vui lòng nhập mã sản phẩm';
+  static const String product_validate_code_min_length = 'Mã sản phẩm quá ngắn';
+  static const String product_validate_price_empty =
+      'Vui lòng nhập giá sản phẩm';
+  static const String product_validate_price_invalid = 'Giá phải là số hợp lệ';
+  static const String product_validate_price_positive = 'Giá phải lớn hơn 0';
+  static const String product_validate_stock_empty = 'Vui lòng nhập số lượng';
+  static const String product_validate_stock_invalid =
+      'Số lượng phải là số nguyên';
+  static const String product_validate_stock_negative =
+      'Số lượng không được âm';
+  static const String product_validate_category_empty =
+      'Vui lòng nhập danh mục';
 }

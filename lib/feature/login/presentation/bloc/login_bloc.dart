@@ -16,10 +16,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final FocusNode userNameFocus = FocusNode();
   final FocusNode passwordFocus = FocusNode();
 
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
   LoginBloc(this.useCase) : super(LoginState.initial()) {
     on<LoginStarted>(_onStarted);
-    // on<LoginUsernameChanged>(_onUsernameChanged);
-    // on<LoginPasswordChanged>(_onPasswordChanged);
     on<LoginSubmitted>(_onSubmitted);
     on<LoginMessageConsumed>((event, emit) {
       emit(state.copyWith(clearMessage: true));
@@ -34,6 +34,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   Future<void> _onSubmitted(
       LoginSubmitted event, Emitter<LoginState> emit) async {
     emit(state.copyWith(isLoading: true, success: false));
+    if (!(formKey.currentState?.validate() ?? false)) {
+      return;
+    }
     try {
       print("userName: ${userNameController.text}");
       print("password: ${passWorkController.text}");
@@ -66,5 +69,19 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     } finally {
       emit(state.copyWith(isLoading: false));
     }
+  }
+
+  String? userName(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return "Vui lòng nhập tên đăng nhập";
+    }
+    return null;
+  }
+
+  String? password(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return "Vui lòng nhập mật khẩu";
+    }
+    return null;
   }
 }

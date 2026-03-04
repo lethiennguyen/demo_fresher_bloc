@@ -79,7 +79,8 @@ Widget buildProductDetailBody(DetailProductBloc bloc) {
                 borderRadius: BorderRadius.circular(AppDimens.padding20),
               ),
               child: TextUtils(
-                text: "Kho: ${bloc.state.product?.stock?.toString() ?? "0"}",
+                text:
+                    "${LocaleKeys.product_stock_label} ${bloc.state.product?.stock?.toString() ?? "0"}",
                 availableStyle: StyleEnum.t13Bold,
                 color: AppColors.mainColors,
               ),
@@ -91,7 +92,8 @@ Widget buildProductDetailBody(DetailProductBloc bloc) {
 
         // Tên sản phẩm + mã
         TextUtils(
-          text: "Mã [${bloc.state.product?.code ?? ""}]",
+          text:
+              "${LocaleKeys.product_code_label} [${bloc.state.product?.code ?? ""}]",
           availableStyle: StyleEnum.t13Regular,
           color: AppColors.grey,
         ),
@@ -107,7 +109,7 @@ Widget buildProductDetailBody(DetailProductBloc bloc) {
         dividerBase,
         if (bloc.state.product?.category?.name != null)
           buildDetailItem(
-            title: "Danh mục",
+            title: LocaleKeys.product_category_default,
             value: bloc.state.product?.category?.name ?? "",
             isLast: true,
           ),
@@ -115,7 +117,7 @@ Widget buildProductDetailBody(DetailProductBloc bloc) {
         if (bloc.state.product?.description != null &&
             bloc.state.product?.description != "") ...[
           buildDetailItem(
-            title: "Mô tả",
+            title: LocaleKeys.product_description,
             value: bloc.state.product?.description ?? "",
           ),
           sdsSBHeight12,
@@ -145,8 +147,8 @@ Widget buildBottomBarDetail(BuildContext context, DetailProductBloc bloc) {
             () {
               UtilWidget.showConfirmDialog(
                 context,
-                title: "Xóa sản phẩm",
-                subtitle: "Bạn có muỗn xóa không",
+                title: LocaleKeys.product_delete_title,
+                subtitle: LocaleKeys.product_delete_confirm,
                 typeAction: AppConst.actionFail,
                 onCancel: () => Navigator.pop(context),
                 onConfirm: () {

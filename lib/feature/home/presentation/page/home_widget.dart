@@ -64,8 +64,8 @@ Widget _buildFilterStatus(BuildContext context, HomeBloc bloc) {
 Widget _buildFilter(BuildContext context, HomeBloc bloc) {
   return FilterListProduct.fillter(
     context,
-    title: "Danh mục",
-    edit: "Chỉnh sửa",
+    title: LocaleKeys.product_category_default,
+    edit: LocaleKeys.edit,
     onEdit: () => context.read<HomeBloc>().add(const HomeToggleEditCategory()),
     onReload: () => bloc.add(const HomeFetchCategoriesRequested()),
     body: _buildBodyFilter(context, bloc),
@@ -152,7 +152,7 @@ Widget _buildBodyFilter(BuildContext context, HomeBloc bloc) {
 Widget _buildButtonFilter(BuildContext context, HomeBloc bloc) {
   return ButtonUtils.buildFooterButtons(
     context,
-    textCancel: "Thiết lập lại",
+    textCancel: LocaleKeys.lower_it_again,
     textConfirm: LocaleKeys.button_confirm,
     onCancel: () {
       bloc.add(const HomeCategorySelected(null));
@@ -173,7 +173,7 @@ Widget _buildButtonEditCategory(BuildContext context, HomeBloc bloc) {
       Expanded(
         flex: 3,
         child: ButtonUtils.buildButton(
-          "Hủy",
+          LocaleKeys.dialog_cancel,
           () => context.read<HomeBloc>().add(const HomeToggleEditCategory()),
           backgroundColor: AppColors.basicWhite,
           showLoading: true,
@@ -190,7 +190,7 @@ Widget _buildButtonEditCategory(BuildContext context, HomeBloc bloc) {
             Expanded(
               flex: 1,
               child: ButtonUtils.buildButton(
-                "Xóa",
+                LocaleKeys.task_remove,
                 () => _showDialogDeleteCategory(context, bloc),
                 padding: EdgeInsets.zero,
                 height: AppDimens.btnMediumTbSmall,
@@ -205,7 +205,7 @@ Widget _buildButtonEditCategory(BuildContext context, HomeBloc bloc) {
             Expanded(
               flex: 3,
               child: ButtonUtils.buildButton(
-                "Cập nhật",
+                LocaleKeys.update,
                 () => _showDialogUpdateCategory(context, bloc),
                 backgroundColor: AppColors.mainColors,
                 colorText: AppColors.basicWhite,
@@ -266,15 +266,15 @@ void _showDialogCreateCategory(BuildContext context, HomeBloc bloc) {
   bloc.categoryCtrl.clear();
   ShowPopup.showDiaLogTextField(
     context,
-    "Tạo danh mục",
-    "Lưu",
+    LocaleKeys.add_update_category,
+    LocaleKeys.app_save,
     onConfirm: () {
       context
           .read<HomeBloc>()
           .add(HomeCreateCategoryRequested(bloc.categoryCtrl.text));
       Navigator.pop(context);
     },
-    hintText: "Danh mục mới",
+    hintText: LocaleKeys.new_category,
     isActiveBack: true,
     bloc.categoryCtrl,
     bloc.fcsCategory,
@@ -287,7 +287,7 @@ void _showDialogUpdateCategory(BuildContext context, HomeBloc bloc) {
     UtilWidget.showSnackBar(
       context: context,
       title: LocaleKeys.notification_title,
-      message: "Hãy chọn danh mục để cập nhật",
+      message: LocaleKeys.add_new_category,
     );
     return;
   }
@@ -295,8 +295,8 @@ void _showDialogUpdateCategory(BuildContext context, HomeBloc bloc) {
   bloc.categoryCtrl.text = bloc.state.selectedCategory?.name ?? '';
   ShowPopup.showDiaLogTextField(
     context,
-    "Cập nhật danh mục",
-    "Lưu",
+    LocaleKeys.update_category,
+    LocaleKeys.app_save,
     onConfirm: () {
       context.read<HomeBloc>().add(
             HomeUpdateCategoryRequested(
@@ -306,7 +306,7 @@ void _showDialogUpdateCategory(BuildContext context, HomeBloc bloc) {
           );
       Navigator.pop(context);
     },
-    hintText: "Danh mục mới",
+    hintText: LocaleKeys.new_category,
     isActiveBack: true,
     bloc.categoryCtrl,
     bloc.fcsCategory,
@@ -318,15 +318,15 @@ void _showDialogDeleteCategory(BuildContext context, HomeBloc bloc) {
     UtilWidget.showSnackBar(
       context: context,
       title: LocaleKeys.notification_title,
-      message: "Hãy chọn danh mục để xóa",
+      message: LocaleKeys.product_delete_category_hint,
     );
     return;
   }
 
   UtilWidget.showConfirmDialog(
     context,
-    title: "Xóa danh mục",
-    subtitle: "Bạn có muỗn xóa không",
+    title: LocaleKeys.product_delete_category,
+    subtitle: LocaleKeys.product_delete_category_title,
     typeAction: AppConst.actionFail,
     onCancel: () => Navigator.pop(context),
     onConfirm: () {
@@ -487,7 +487,8 @@ Widget _buildProductCard(BuildContext context, ProductEntity entity,
                               size: 13, color: AppColors.grey),
                           sdsSBWidth4,
                           TextUtils(
-                            text: "Kho: ${entity.stock ?? 0}",
+                            text:
+                                "${LocaleKeys.product_stock_label} ${entity.stock ?? 0}",
                             availableStyle: StyleEnum.t12Regular,
                             color: AppColors.grey,
                           ),
