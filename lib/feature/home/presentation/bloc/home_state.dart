@@ -12,9 +12,11 @@ class HomeState extends Equatable {
   final int total;
   final bool enablePullup;
   final bool showFilter; // thay cho controller.showFilter (UI state)
+  final bool isFilterCategory; // thay cho controller.showFilter (UI state)
 
   final bool isLoading; // tương đương showLoading()
   final bool isButtonLoading; // tương đương showButtonLoading()
+  final bool isBack;
 
   final bool isEditCategory;
   final String errorCategory;
@@ -36,6 +38,8 @@ class HomeState extends Equatable {
     required this.total,
     required this.enablePullup,
     this.showFilter = false,
+    this.isFilterCategory = false,
+    required this.isBack,
     required this.isLoading,
     required this.isButtonLoading,
     required this.isEditCategory,
@@ -57,6 +61,8 @@ class HomeState extends Equatable {
         isLoading: false,
         isButtonLoading: false,
         isEditCategory: false,
+        isFilterCategory: false,
+        isBack: false,
         errorCategory: '',
         keyword: '',
         message: null,
@@ -75,6 +81,8 @@ class HomeState extends Equatable {
     bool? showFilter,
     bool? isButtonLoading,
     bool? isEditCategory,
+    bool? isBack,
+    bool? isFilterCategory,
     String? errorCategory,
     String? keyword,
     String? message,
@@ -91,6 +99,8 @@ class HomeState extends Equatable {
       enablePullup: enablePullup ?? this.enablePullup,
       isLoading: isLoading ?? this.isLoading,
       showFilter: showFilter ?? this.showFilter,
+      isBack: isBack ?? this.isBack,
+      isFilterCategory: isFilterCategory ?? this.isFilterCategory,
       isButtonLoading: isButtonLoading ?? this.isButtonLoading,
       isEditCategory: isEditCategory ?? this.isEditCategory,
       keyword: keyword ?? this.keyword,
@@ -108,6 +118,8 @@ class HomeState extends Equatable {
         pageIndex,
         pageSize,
         total,
+        isBack,
+        isFilterCategory,
         enablePullup,
         isLoading,
         showFilter,

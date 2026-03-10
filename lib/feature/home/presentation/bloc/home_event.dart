@@ -92,7 +92,12 @@ class HomeLogoutRequested extends HomeEvent {
 
 class OpenFilter extends HomeEvent {
   final bool showFilter;
-  const OpenFilter({this.showFilter = true});
+  final bool isFilterCategory;
+  const OpenFilter({this.showFilter = true, this.isFilterCategory = false});
+}
+
+class FilterStatus extends HomeEvent {
+  const FilterStatus();
 }
 
 class HomeMessageConsumed extends HomeEvent {

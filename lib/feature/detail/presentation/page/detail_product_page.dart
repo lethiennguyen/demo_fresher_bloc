@@ -83,7 +83,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
         bloc.title,
         centerTitle: true,
         backButtonColor: AppColors.basicBlack,
-        textColor: AppColors.mainColors,
+        textColor: AppColors.basicBlack,
         funcLeading: () {
           bloc.add(OnBack());
         },

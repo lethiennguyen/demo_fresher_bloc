@@ -273,7 +273,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   void onFilter(OpenFilter event, Emitter<HomeState> emit) {
-    emit(state.copyWith(showFilter: !state.showFilter));
+    emit(state.copyWith(
+        showFilter: event.showFilter,
+        isFilterCategory: event.isFilterCategory));
   }
 
   @override

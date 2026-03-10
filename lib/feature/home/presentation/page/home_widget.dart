@@ -52,20 +52,21 @@ Widget _buildFilterStatus(BuildContext context, HomeBloc bloc) {
           ).paddingSymmetric(vertical: AppDimens.padding2),
         ),
         ButtonUtils.buildFilterButton(
-          onPressed: () => context.read<HomeBloc>().add(OpenFilter()),
-          selected: bloc.state.showFilter,
+          onPressed: () => bloc.add(OpenFilter(
+              showFilter: !bloc.state.showFilter,
+              isFilterCategory: bloc.state.isFilterCategory)),
+          selected: bloc.state.isFilterCategory,
         )
       ],
     ).paddingSymmetric(horizontal: AppDimens.padding6),
   );
 }
 
-// ===== FILTER PANEL =====
 Widget _buildFilter(BuildContext context, HomeBloc bloc) {
   return FilterListProduct.fillter(
     context,
     title: LocaleKeys.product_category_default,
-    edit: LocaleKeys.edit,
+    edit: bloc.state.isEditCategory ? "Hủy" : LocaleKeys.edit,
     onEdit: () => context.read<HomeBloc>().add(const HomeToggleEditCategory()),
     onReload: () => bloc.add(const HomeFetchCategoriesRequested()),
     body: _buildBodyFilter(context, bloc),
@@ -162,7 +163,7 @@ Widget _buildButtonFilter(BuildContext context, HomeBloc bloc) {
     onConfirm: () {
       final id = context.read<HomeBloc>().state.selectedCategory?.id;
       context.read<HomeBloc>().add(HomeFilterByCategoryRequested(id));
-      bloc.add(const OpenFilter(showFilter: false));
+      bloc.add(const OpenFilter(showFilter: false, isFilterCategory: true));
     },
   );
 }
@@ -170,18 +171,7 @@ Widget _buildButtonFilter(BuildContext context, HomeBloc bloc) {
 Widget _buildButtonEditCategory(BuildContext context, HomeBloc bloc) {
   return Row(
     children: [
-      Expanded(
-        flex: 3,
-        child: ButtonUtils.buildButton(
-          LocaleKeys.dialog_cancel,
-          () => context.read<HomeBloc>().add(const HomeToggleEditCategory()),
-          backgroundColor: AppColors.basicWhite,
-          showLoading: true,
-          colorText: AppColors.mainColors,
-          height: AppDimens.btnMediumTbSmall,
-          borderRadius: BorderRadius.circular(AppDimens.radius12),
-        ),
-      ),
+      Expanded(flex: 3, child: SizedBox()),
       sdsSBWidth60,
       Expanded(
         flex: 7,
@@ -195,7 +185,7 @@ Widget _buildButtonEditCategory(BuildContext context, HomeBloc bloc) {
                 padding: EdgeInsets.zero,
                 height: AppDimens.btnMediumTbSmall,
                 width: AppDimens.btnMediumTbSmall,
-                border: Border.all(color: AppColors.mainColors, width: 2),
+                border: Border.all(color: AppColors.mainColors, width: 1),
                 backgroundColor: AppColors.basicWhite,
                 colorText: AppColors.mainColors,
                 borderRadius: BorderRadius.circular(AppDimens.radius12),

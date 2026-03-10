@@ -2,25 +2,31 @@ part of 'detail_product_page.dart';
 
 Widget _buildBody(BuildContext context, DetailProductBloc bloc) {
   return SingleChildScrollView(
-    child: Form(
-      key: bloc.formKey,
-      child: Column(
-        children: [
-          buildImage(bloc),
-          sdsSBHeight16,
-          buildNameProduct(bloc),
-          sdsSBHeight16,
-          buildCodeProduct(bloc),
-          sdsSBHeight16,
-          buildPriceProduct(bloc),
-          sdsSBHeight16,
-          buildStockProduct(bloc),
-          sdsSBHeight16,
-          buildCategoryProduct(context, bloc),
-          sdsSBHeight16,
-          buildDescriptionProduct(bloc),
-        ],
-      ).paddingAll(AppDimens.padding16),
+    child: GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () {
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
+      child: Form(
+        key: bloc.formKey,
+        child: Column(
+          children: [
+            buildImage(bloc),
+            sdsSBHeight16,
+            buildNameProduct(bloc),
+            sdsSBHeight16,
+            buildCodeProduct(bloc),
+            sdsSBHeight16,
+            buildPriceProduct(bloc),
+            sdsSBHeight16,
+            buildStockProduct(bloc),
+            sdsSBHeight16,
+            buildCategoryProduct(context, bloc),
+            sdsSBHeight16,
+            buildDescriptionProduct(bloc),
+          ],
+        ).paddingAll(AppDimens.padding16),
+      ),
     ),
   );
 }
@@ -170,21 +176,22 @@ Widget buildDescriptionProduct(DetailProductBloc bloc) {
     label: LocaleKeys.product_description,
     controller: bloc.descriptionCtrl,
     backgroundColor: AppColors.basicWhite,
+    padding: EdgeInsets.zero,
   );
 }
 
 Widget buildCategoryProduct(BuildContext context, DetailProductBloc bloc) {
   final selectedValue = bloc.state.selectedCategory;
-  final Color color =
-      selectedValue == null ? AppColors.basicGrey2 : AppColors.mainColors;
-  final Color textColor =
-      selectedValue == null ? AppColors.basicBlack : AppColors.mainColors;
+  // final Color color =
+  //     selectedValue == null ? AppColors.basicGrey2 : AppColors.mainColors;
+  // final Color textColor =
+  //     selectedValue == null ? AppColors.basicBlack : AppColors.mainColors;
   return UtilWidget.baseDropDownBottomSheetFilter(context,
       height: AppDimens.height45,
       title: LocaleKeys.product_category,
-      borderColor: color,
-      iconColor: textColor,
-      textColor: textColor,
+      borderColor: AppColors.basicGrey3,
+      iconColor: AppColors.basicBlack,
+      textColor: AppColors.basicBlack,
       backgroundColor:
           selectedValue == null ? AppColors.basicGrey5 : AppColors.basicWhite,
       value: selectedValue?.name ?? LocaleKeys.product_category_default,

@@ -304,13 +304,13 @@ class ShowPopup {
                     () {
                       Navigator.pop(context);
                     },
-                    backgroundColor: AppColors.mainColors,
+                    backgroundColor: AppColors.basicWhite,
                     isLoading: false,
                     showLoading: true,
-                    colorText: AppColors.basicWhite,
+                    colorText: AppColors.mainColors,
                     width: 100,
                     height: 40,
-                    borderRadius: BorderRadius.circular(AppDimens.radius12),
+                    borderRadius: BorderRadius.circular(AppDimens.radius4),
                   ),
                   sdsSBHeight20,
                   ButtonUtils.buildButton(
@@ -325,7 +325,7 @@ class ShowPopup {
                     colorText: AppColors.basicWhite,
                     width: 100,
                     height: 40,
-                    borderRadius: BorderRadius.circular(AppDimens.radius12),
+                    borderRadius: BorderRadius.circular(AppDimens.radius4),
                   ),
                   // _baseButton(
                   //   onConfirm ??

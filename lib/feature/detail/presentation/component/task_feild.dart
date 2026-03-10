@@ -83,30 +83,48 @@ class IconLeadingTextField extends TaskField {
                   ],
                 ),
                 sdsSBHeight10,
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: AppDimens.paddingSmallest),
-                  child: TextField(
-                    controller: controller,
-                    minLines: minLines,
-                    maxLines: maxLines,
-                    textCapitalization: TextCapitalization.sentences,
-                    cursorColor: AppColors.basicBlack,
-                    readOnly: readOnly ?? false,
-                    style: TextStyle(
+                TextField(
+                  controller: controller,
+                  minLines: minLines,
+                  maxLines: maxLines,
+                  textCapitalization: TextCapitalization.sentences,
+                  cursorColor: AppColors.basicBlack,
+                  readOnly: readOnly ?? false,
+                  style: TextStyle(
+                    fontSize: fontSize ?? AppDimens.fontSmall(context),
+                    color: AppColors.colorBlack,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: hintText,
+                    hintStyle: TextStyle(
+                      color: AppColors.grey,
                       fontSize: fontSize ?? AppDimens.fontSmall(context),
-                      color: AppColors.colorBlack,
                     ),
-                    decoration: InputDecoration(
-                      hintText: hintText,
-                      hintStyle: TextStyle(
-                        color: AppColors.grey,
-                        fontSize: fontSize ?? AppDimens.fontSmall(context),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(
+                        color: AppColors.basicGrey3,
+                        width: 1,
                       ),
-                      border: InputBorder.none,
-                      isDense: true,
-                      contentPadding: EdgeInsets.zero,
                     ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(
+                        color: AppColors.basicGrey3,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(
+                        color: AppColors.mainColors,
+                        width: 1.5,
+                      ),
+                    ),
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 10,
+                    ),
+                    isDense: true,
                   ),
                 ),
               ],

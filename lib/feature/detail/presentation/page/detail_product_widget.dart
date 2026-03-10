@@ -19,7 +19,7 @@ Widget buildDetailItem({
         availableStyle: StyleEnum.t16Bold,
         color: AppColors.basicBlack,
         maxLine: 50,
-      ),
+      ).paddingSymmetric(horizontal: AppDimens.padding8),
       if (!isLast) ...[
         sdsSBHeight16,
         dividerBase,
@@ -103,7 +103,7 @@ Widget buildProductDetailBody(DetailProductBloc bloc) {
           availableStyle: StyleEnum.t18Bold,
           color: AppColors.textPrimary,
           maxLine: 4,
-        ),
+        ).paddingSymmetric(horizontal: AppDimens.padding8),
 
         sdsSBHeight20,
         dividerBase,

@@ -51,6 +51,9 @@ class _HomePageState extends State<HomePage> {
             );
             bloc.add(const HomeMessageConsumed());
           }
+          if (state.isBack) {
+            Navigator.pop(context);
+          }
           if (state.didLogout) {
             Navigator.pushNamedAndRemoveUntil(
                 context, AppRouter.routerLogin, (a) => false);
@@ -61,8 +64,8 @@ class _HomePageState extends State<HomePage> {
             backgroundColor: AppColors.colorWhite,
             appBar: UtilWidget.buildAppBar(
               context,
-             LocaleKeys.app_list,
-              textColor: AppColors.mainColors,
+              LocaleKeys.app_list,
+              textColor: AppColors.basicBlack,
               showBackButton: false,
               actions: [
                 buildIconButton(() {
