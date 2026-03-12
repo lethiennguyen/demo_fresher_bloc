@@ -62,6 +62,44 @@ feature/<name>/
     └── page/                  # UI (Widget)
 ```
 
+### Sơ đồ phân tầng (Dependency Rule)
+
+```
+┌─────────────────────────────────────────────┐
+│           Presentation Layer                │
+│    (BLoC · Page · Widget)                   │
+│    Chỉ phụ thuộc vào Domain                 │
+├─────────────────────────────────────────────┤
+│             Domain Layer                    │
+│    (Entity · UseCase · Repository IF)       │
+│    Không phụ thuộc bất kỳ tầng nào khác    │
+├─────────────────────────────────────────────┤
+│              Data Layer                     │
+│    (Model · DataSource · RepositoryImpl)    │
+│    Implement interface của Domain           │
+└─────────────────────────────────────────────┘
+         ↑ Dependency chỉ đi lên trên
+```
+
+Mũi tên phụ thuộc luôn hướng vào trong (Domain). Tầng ngoài biết tầng trong nhưng **không ngược lại**.
+
+---
+
+### ⚖️ Trade-off của kiến trúc
+
+| Khía cạnh | Ưu điểm | Nhược điểm / Chi phí |
+|-----------|---------|----------------------|
+| **Clean Architecture** | Dễ test từng tầng độc lập; thay đổi data source không ảnh hưởng UI | Boilerplate nhiều: cần viết Entity, Model, Mapper, UseCase cho mỗi feature |
+| **BLoC pattern** | State rõ ràng, luồng dữ liệu một chiều, dễ debug với BLoC Observer | Nhiều file (Event / State / Bloc) even với logic đơn giản |
+| **GetIt DI** | Không cần `BuildContext` để lấy dependency; dễ mock trong test | Nếu quên register sẽ throw lỗi runtime thay vì compile-time |
+| **Mapper riêng biệt** | Tách biệt model API và entity domain; dễ thay đổi API response | Phải viết thêm mapper mỗi khi thêm field hay feature mới |
+| **Hive local cache** | Offline login hoạt động được; khởi động nhanh | Phải quản lý đồng bộ dữ liệu giữa local và remote thủ công |
+| **Tách `data_sources`** | Dễ swap nguồn dữ liệu (API ↔ local) | Thêm một lớp indirection, đôi khi phức tạp hơn cần thiết với feature nhỏ |
+
+> **Kết luận cho fresher:** Clean Architecture + BLoC phù hợp nhất khi ứng dụng có **nhiều feature, nhiều người phát triển, cần test**. Với app nhỏ hoặc prototype nhanh, chi phí boilerplate có thể vượt quá lợi ích.
+
+---
+
 ### Công nghệ sử dụng
 
 | Thư viện | Mục đích |
@@ -134,65 +172,111 @@ Password: 123456
 
 ---
 
-## 🔄 Flow chính
+## 🔄 Flow State (BLoC)
 
-### 1. Khởi động (Splash)
+Mỗi màn hình có BLoC riêng. UI lắng nghe `State` và gửi `Event` — không xử lý logic trực tiếp trong widget.
 
-```
-App start
-  └─▶ main() — Hive.initFlutter() + moduleDIApp() (GetIt register)
-        └─▶ SplashPage
-              └─▶ AppBloc(AppStarted)
-                    ├─▶ [Có session] ──▶ Authenticated ──▶ /home
-                    └─▶ [Không có]  ──▶ Unauthenticated ──▶ /login
-```
-
-### 2. Đăng nhập (Login)
+### 1. Khởi động – AppBloc State Flow
 
 ```
-LoginPage
-  └─▶ User nhập email + password
-        └─▶ LoginBloc(LoginSubmitted)
-              ├─▶ Validate đầu vào
-              ├─▶ LoginUseCase.call(LoginRequestEntity)
-              │     └─▶ LoginRepository
-              │           ├─▶ [Online]  — Gọi POST /api/v1/login (Dio)
-              │           └─▶ [Offline] — Kiểm tra Hive local
-              ├─▶ Lưu token + thông tin user vào Hive (session)
-              └─▶ Navigate ──▶ /home
+                ┌─────────────┐
+                │  AppInitial │  (State ban đầu)
+                └──────┬──────┘
+                       │  Event: AppStarted
+                       ▼
+                ┌─────────────┐
+                │  AppLoading │  (kiểm tra Hive session)
+                └──────┬──────┘
+          ┌────────────┴────────────┐
+          │ có session              │ không có session
+          ▼                         ▼
+  ┌───────────────┐        ┌──────────────────┐
+  │ Authenticated │        │ Unauthenticated  │
+  │  → /home      │        │  → /login        │
+  └───────────────┘        └──────────────────┘
 ```
 
-### 3. Màn hình Home (Product List)
+### 2. Đăng nhập – LoginBloc State Flow
 
 ```
-HomePage
-  └─▶ HomeBloc(HomeFetched)
-        ├─▶ GET /api/v1/categories  — danh sách category
-        ├─▶ GET /api/v1/products    — danh sách sản phẩm (kèm filter/page)
-        ├─▶ Skeleton loading ──▶ render danh sách
-        ├─▶ Xoá category  — DELETE /api/v1/categories/:id
-        └─▶ Xoá sản phẩm  — DELETE /api/v1/products/:id
+              ┌──────────────┐
+              │  LoginInitial│
+              └──────┬───────┘
+                     │  Event: LoginSubmitted
+                     ▼
+              ┌──────────────┐
+              │ LoginLoading │  (validate → gọi UseCase)
+              └──────┬───────┘
+          ┌──────────┴──────────┐
+          │ thành công           │ thất bại
+          ▼                      ▼
+  ┌───────────────┐     ┌─────────────────────┐
+  │ LoginSuccess  │     │    LoginFailure      │
+  │  → /home      │     │ (hiện error message) │
+  └───────────────┘     └─────────────────────┘
 ```
 
-### 4. Chi tiết sản phẩm (Detail)
+> **Online vs Offline:** `LoginRepository` thử gọi API trước; nếu không có mạng, fallback sang Hive local để xác thực.
+
+### 3. Home – HomeBloc State Flow
 
 ```
-Home ──[tap sản phẩm]──▶ /detail (truyền ProductEntity)
-  └─▶ DetailProductPage
-        └─▶ DetailProductBloc
-              ├─▶ Hiển thị thông tin sản phẩm
-              ├─▶ Chỉnh sửa category — PUT /api/v1/categories/:id
-              └─▶ Upload ảnh
-                    └─▶ image_picker ──▶ Cloudinary (multipart POST)
-                          └─▶ Cập nhật URL ảnh vào sản phẩm
+              ┌─────────────┐
+              │ HomeInitial │
+              └──────┬──────┘
+                     │  Event: HomeFetched
+                     ▼
+              ┌─────────────┐
+              │ HomeLoading │  (skeleton UI)
+              └──────┬──────┘
+          ┌──────────┴──────────┐
+          │ thành công           │ lỗi
+          ▼                      ▼
+  ┌──────────────────┐   ┌──────────────┐
+  │  HomeLoaded      │   │  HomeError   │
+  │ (products+cats)  │   │ (retry btn)  │
+  └──────┬───────────┘   └──────────────┘
+         │
+         │  Event: HomeDeleteProduct / HomeDeleteCategory
+         ▼
+  ┌──────────────────┐
+  │  HomeLoading     │  (optimistic hoặc reload sau xoá)
+  └──────────────────┘
 ```
 
-### 5. Sơ đồ tổng quát
+### 4. Detail – DetailProductBloc State Flow
 
 ```
-Splash ──▶ Login ──▶ Home ──▶ Detail
-                      │
-                      └──▶ Image Picker (upload ảnh)
+              ┌───────────────────┐
+              │ DetailInitial     │
+              └────────┬──────────┘
+                       │  Event: DetailLoaded
+                       ▼
+              ┌───────────────────┐
+              │  DetailReady      │  (hiện thông tin)
+              └────────┬──────────┘
+         ┌─────────────┼──────────────────┐
+         │ Edit cat     │ Pick & upload img │ Save product
+         ▼              ▼                   ▼
+  ┌────────────┐ ┌─────────────┐   ┌─────────────────┐
+  │ CatUpdated │ │ ImageUploading│  │  ProductUpdated │
+  └────────────┘ └──────┬──────┘   └─────────────────┘
+                        │ success
+                        ▼
+                 ┌─────────────┐
+                 │ ImageUploaded│  (URL mới → cập nhật UI)
+                 └─────────────┘
+```
+
+### 5. Sơ đồ điều hướng tổng quát
+
+```
+  ┌─────────┐     ┌───────────┐     ┌──────────┐     ┌──────────────┐
+  │  Splash  │────▶│   Login   │────▶│   Home   │────▶│    Detail    │
+  └─────────┘     └───────────┘     └────┬─────┘     └──────┬───────┘
+                                         │                   │
+                                         └──────────────────▶│ Image Picker
+                                                             └──────────────▶ Cloudinary
 ```
 
 ---
